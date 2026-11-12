@@ -1,0 +1,4272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bevelit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      font-family: "Titan One", sans-serif !important;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Titan One", sans-serif;
+      background-image: url("https://i.yourimageshare.com/ulrffQVQVs.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .banner {
+      display: block;
+      width: 50%;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .account-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto;
+    }
+
+    .account-button {
+      padding: 12px 28px;
+      border: 3px solid #8be9fd;
+      border-radius: 10px;
+      background: #5636c9;
+      color: white;
+      font-family: "Titan One", sans-serif;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #4e77b5, 0 0 12px #8be9fd;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .account-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #4e77b5, 0 0 18px #8be9fd;
+    }
+
+    .auth-screen {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .auth-screen[hidden] {
+      display: none;
+    }
+
+    #account-screen:not([hidden]) {
+      display: block;
+      min-height: 100vh;
+      padding: 0;
+      background: rgba(37, 25, 99, 0.78);
+    }
+
+    .auth-card {
+      width: min(100%, 380px);
+      padding: 28px;
+      border: 3px solid #8be9fd;
+      border-radius: 16px;
+      background: rgba(86, 54, 201, 0.94);
+      color: white;
+      box-shadow: 0 0 18px #8be9fd;
+      box-sizing: border-box;
+    }
+
+    .auth-card h1 {
+      margin: 0 0 20px;
+      text-align: center;
+    }
+
+    .auth-card label {
+      display: block;
+      margin: 14px 0 6px;
+    }
+
+    .auth-card input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #8be9fd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font: 16px Arial, sans-serif;
+    }
+
+    .auth-card .field-note {
+      margin: 6px 0 0;
+      font: 13px Arial, sans-serif;
+    }
+
+    .auth-card .account-button {
+      display: block;
+      margin: 18px auto 0;
+    }
+
+    .auth-card [hidden] {
+      display: none;
+    }
+
+    .auth-hint {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      z-index: 2;
+      color: #fff;
+      font-size: clamp(18px, 2vw, 32px);
+      line-height: 1.2;
+      text-shadow: 0 3px 0 #342080, 0 0 12px #8be9fd;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+    }
+
+    .game-hub {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      box-sizing: border-box;
+    }
+
+    .hub-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 62px;
+      margin-left: 170px;
+      padding: 10px 26px;
+      border: 0;
+      border-bottom: 2px solid #8be9fd;
+      border-radius: 0;
+      background: rgba(46, 34, 111, 0.97);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(27, 16, 77, 0.32);
+      box-sizing: border-box;
+    }
+
+    .hub-brand {
+      margin: 0;
+      font-size: 24px;
+      text-shadow: 0 2px 0 #342080;
+    }
+
+    .hub-username {
+      color: #8be9fd;
+    }
+
+    .testboy-account-name {
+      color: #000 !important;
+    }
+
+    .hub-workspace {
+      display: block;
+      margin: 0 0 0 170px;
+      padding: 24px 28px;
+    }
+
+    .hub-sidebar {
+      position: fixed;
+      z-index: 3;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 170px;
+      overflow-y: auto;
+      padding: 18px 10px;
+      border: 0;
+      border-right: 2px solid #8be9fd;
+      border-radius: 0;
+      background: linear-gradient(180deg, #5636c9, #342080);
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+
+    .sidebar-label {
+      margin: 0 10px 12px;
+      color: #8be9fd;
+      font: bold 11px Arial, sans-serif;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .hub-welcome {
+      margin: 0 0 24px;
+      padding: 20px 24px;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      border-radius: 18px;
+      background: linear-gradient(110deg, rgba(38, 158, 177, 0.94), rgba(56, 105, 216, 0.95) 55%, rgba(86, 54, 201, 0.96));
+      box-shadow: 0 6px 0 rgba(26, 22, 68, 0.25);
+      color: #fff;
+      text-shadow: 0 2px 0 rgba(35, 29, 86, 0.32);
+    }
+
+    .hub-welcome h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 5vw, 46px);
+    }
+
+    .hub-welcome p {
+      margin: 0;
+      font: 16px/1.5 Arial, sans-serif;
+    }
+
+    .hub-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hub-tab {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 13px 12px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      background: transparent;
+      color: #fff;
+      font: 16px "Titan One", sans-serif;
+      text-align: left;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+
+    .hub-tab:hover {
+      background: rgba(139, 233, 253, 0.16);
+      transform: translateX(2px);
+    }
+
+    .hub-tab[aria-pressed="true"] {
+      border-color: rgba(139, 233, 253, 0.9);
+      border-radius: 12px;
+      background: linear-gradient(100deg, #168b9d, #3869d8);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(9, 18, 83, 0.25);
+    }
+
+    .hub-tab-icon {
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      place-items: center;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 17px;
+    }
+
+    .profile-card {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 24px;
+      padding: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      border-radius: 18px;
+      background: linear-gradient(120deg, rgba(38, 158, 177, 0.45), rgba(86, 54, 201, 0.55));
+    }
+
+    .profile-avatar {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 0 10px rgba(139, 233, 253, 0.65);
+      font-size: 28px;
+      overflow: hidden;
+    }
+
+    .profile-avatar img,
+    .profile-choice-icon img,
+    .chat-avatar img,
+    .collection-card-icon img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .pack-reveal-blook img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px;
+      display: block;
+    }
+
+    .profile-avatar-name {
+      margin: 0 0 6px;
+      font-size: 23px;
+    }
+
+    .profile-avatar-rarity {
+      margin: 0;
+      font: bold 14px Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .profile-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font: bold 11px Arial, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .profile-badge.owner {
+      border-color: #ffc857;
+      background: rgba(255, 200, 87, 0.24);
+      color: #ffe7a5;
+    }
+
+    .profile-badge.day-one {
+      border-color: #7ff0a6;
+      background: rgba(127, 240, 166, 0.18);
+      color: #cfffe3;
+    }
+
+    .admin-panel {
+      margin-top: 20px;
+      padding: 18px;
+      border: 2px solid rgba(139, 233, 253, 0.85);
+      border-radius: 18px;
+      background: rgba(28, 22, 86, 0.66);
+    }
+
+    .admin-panel h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .admin-grid label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font: 12px Arial, sans-serif;
+      color: #d6edff;
+    }
+
+    .admin-grid input,
+    .admin-grid select {
+      width: 100%;
+      padding: 9px 10px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      background: rgba(8, 11, 34, 0.45);
+      color: #fff;
+      box-sizing: border-box;
+      font: 14px Arial, sans-serif;
+    }
+
+    .admin-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .admin-feedback {
+      margin: 12px 0 0;
+      min-height: 1.3em;
+      font: 13px Arial, sans-serif;
+      color: #8be9fd;
+    }
+
+    .screenshot-admin-requests {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(139, 233, 253, 0.45);
+    }
+
+    .screenshot-admin-requests h4,
+    .screenshot-request-box h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .screenshot-request-box {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid rgba(139, 233, 253, 0.65);
+      border-radius: 12px;
+      background: rgba(28, 22, 86, 0.55);
+    }
+
+    .screenshot-request-box label {
+      display: block;
+      margin-top: 10px;
+      font: 13px Arial, sans-serif;
+    }
+
+    .screenshot-request-box textarea {
+      display: block;
+      width: 100%;
+      min-height: 72px;
+      margin-top: 6px;
+      padding: 9px;
+      border: 2px solid #8be9fd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font: 14px Arial, sans-serif;
+      resize: vertical;
+    }
+
+    .screenshot-request-status,
+    .screenshot-request-item p {
+      margin: 8px 0 0;
+      font: 13px/1.4 Arial, sans-serif;
+    }
+
+    .screenshot-request-item {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .profile-choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .profile-choice {
+      min-height: 120px;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .profile-choice:hover,
+    .profile-choice[aria-pressed="true"] {
+      border-color: #8be9fd;
+      background: rgba(22, 139, 157, 0.5);
+      box-shadow: 0 0 12px rgba(139, 233, 253, 0.45);
+    }
+
+    .profile-choice-icon {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 36px;
+    }
+
+    .profile-choice-icon img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 12px;
+      vertical-align: middle;
+    }
+
+    .profile-choice-name,
+    .profile-choice-rarity {
+      display: block;
+    }
+
+    .profile-choice-name {
+      font: bold 14px Arial, sans-serif;
+    }
+
+    .profile-choice-rarity {
+      margin-top: 5px;
+      font: 12px Arial, sans-serif;
+    }
+
+    .hub-section[hidden] {
+      display: none;
+    }
+
+    .hub-section {
+      margin-top: 0;
+      border: 3px solid #8be9fd;
+      border-radius: 18px;
+      background: rgba(52, 32, 128, 0.94);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(139, 233, 253, 0.45);
+    }
+
+    .hub-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .hub-card {
+      min-height: 190px;
+      padding: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      border-radius: 18px;
+      color: #fff;
+      box-shadow: 0 6px 0 rgba(35, 29, 86, 0.35);
+      box-sizing: border-box;
+    }
+
+    .hub-card:nth-child(1) {
+      background: linear-gradient(145deg, #ff8a3d, #e94175);
+    }
+
+    .hub-card:nth-child(2) {
+      background: linear-gradient(145deg, #28b8cf, #3869d8);
+    }
+
+    .hub-card:nth-child(3) {
+      background: linear-gradient(145deg, #51c785, #168b9d);
+    }
+
+    .hub-card-icon {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 32px;
+    }
+
+    .hub-card h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .hub-card p {
+      margin: 9px 0 0;
+      line-height: 1.4;
+    }
+
+    .arcade-section {
+      margin-top: 0;
+      padding: 22px;
+      border: 3px solid #8be9fd;
+      border-radius: 18px;
+      background: rgba(52, 32, 128, 0.94);
+      box-shadow: 0 0 18px rgba(139, 233, 253, 0.45);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .arcade-section h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .arcade-description {
+      margin: 8px 0 18px;
+      font: 15px/1.5 Arial, sans-serif;
+    }
+
+    .arcade-games {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+    }
+
+    .market-wallet {
+      margin: 14px 0;
+      color: #8be9fd;
+      font-size: 19px;
+    }
+
+    .market-collection-title {
+      margin-top: 28px;
+    }
+
+    .market-packs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .pack-card {
+      position: relative;
+      display: flex;
+      min-height: 260px;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px;
+      overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      background: transparent;
+      color: #fff;
+      text-align: center;
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+
+    .pack-card::before,
+    .pack-card::after {
+      display: none;
+    }
+
+    .pack-card[data-pack="starter"],
+    .pack-card[data-pack="arcade"],
+    .pack-card[data-pack="cosmic"] {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .pack-card[data-pack] {
+      border-color: rgba(139, 233, 253, 0.9);
+    }
+
+    .pack-card .pack-art {
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .pack-card:hover .pack-art {
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.65));
+      transform: translateY(-4px) rotate(3deg) scale(1.05);
+    }
+
+    .pack-art {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 100px;
+      height: 118px;
+      place-items: center;
+      margin: 2px 0 12px;
+      border: 0;
+      border-radius: 18px 18px 24px 24px;
+      background: transparent;
+      box-shadow: none;
+      font-size: 52px;
+      transform: rotate(-5deg);
+    }
+
+    .pack-art::before,
+    .pack-art::after {
+      position: absolute;
+      top: 8px;
+      width: 14px;
+      height: 5px;
+      border-radius: 4px;
+      background: #fff;
+      content: "";
+    }
+
+    .pack-art::before {
+      left: 12px;
+    }
+
+    .pack-art::after {
+      right: 12px;
+    }
+
+    .pack-card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 20px;
+      text-shadow: 0 2px 0 rgba(35, 29, 86, 0.35);
+    }
+
+    .pack-card p {
+      position: relative;
+      z-index: 1;
+      margin: 8px 0;
+      font: 13px/1.4 Arial, sans-serif;
+    }
+
+    .pack-odds {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .pack-card .account-button {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding: 9px 16px;
+      font-size: 15px;
+    }
+
+    .pack-card .account-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .pack-open-controls {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .pack-open-controls .account-button {
+      width: 100%;
+      min-width: 0;
+      margin-top: 0;
+      padding: 8px 7px;
+      font-size: 13px;
+    }
+
+    .pack-open-controls .pack-open-single,
+    .pack-auto-count,
+    .pack-open-auto,
+    .pack-open-max {
+      grid-column: 1 / -1;
+    }
+
+    .pack-auto-count {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font: bold 12px Arial, sans-serif;
+      text-align: left;
+    }
+
+    .pack-auto-count input {
+      width: 76px;
+      padding: 7px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      border-radius: 8px;
+      background: rgba(36, 27, 105, 0.55);
+      color: #fff;
+      font: bold 14px Arial, sans-serif;
+    }
+
+    .pack-open-controls .pack-open-stop {
+      border-color: #ffe27a;
+      background: linear-gradient(145deg, #ed754b, #b83f70);
+    }
+
+    .pack-reveal {
+      margin-top: 20px;
+      padding: 20px;
+      border: 3px solid #ffe27a;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255, 185, 65, 0.3), rgba(86, 54, 201, 0.9));
+      text-align: center;
+      animation: reveal-panel 420ms ease-out both;
+    }
+
+    .pack-reveal[hidden] {
+      display: none;
+    }
+
+    .pack-reveal.is-opening {
+      border-color: #8be9fd;
+      background: linear-gradient(145deg, rgba(139, 233, 253, 0.25), rgba(86, 54, 201, 0.96));
+    }
+
+    .pack-reveal-blook {
+      position: relative;
+      isolation: isolate;
+      display: inline-grid;
+      width: 104px;
+      height: 104px;
+      place-items: center;
+      margin: 10px 0;
+      border: 4px solid #fff;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 24px #ffe27a;
+      font-size: 62px;
+      animation: reveal-blook 650ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal-blook.is-pack-opening {
+      border-color: #8be9fd;
+      box-shadow: 0 0 25px rgba(139, 233, 253, 0.9);
+      animation: pack-opening 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .pack-reveal[data-rarity="Uncommon"] .pack-reveal-blook {
+      box-shadow: 0 0 25px rgba(127, 240, 166, 0.9);
+      animation: reveal-uncommon 850ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal[data-rarity="Rare"] .pack-reveal-blook {
+      box-shadow: 0 0 30px rgba(114, 202, 255, 0.95);
+      animation: reveal-rare 950ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal[data-rarity="Epic"] .pack-reveal-blook {
+      box-shadow: 0 0 34px rgba(231, 160, 255, 0.95);
+      animation: reveal-epic 1100ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal[data-rarity="Legendary"] .pack-reveal-blook {
+      border-color: #ffe27a;
+      box-shadow: 0 0 42px rgba(255, 226, 122, 1);
+      animation: reveal-legendary 1350ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal[data-rarity="Mystical"] .pack-reveal-blook {
+      border: 3px solid #a8f3ff;
+      box-shadow: 0 0 42px rgba(168, 243, 255, 0.95), 0 0 80px rgba(125, 108, 255, 0.75);
+      animation: reveal-legendary 1800ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] {
+      border: 3px solid transparent;
+      background:
+        linear-gradient(145deg, #382067, #201548) padding-box,
+        linear-gradient(120deg, #ff6b6b, #ffd166, #7ff0a6, #72caff, #e7a0ff, #ff6b6b) border-box;
+      background-size: 100% 100%, 300% 300%;
+      animation: reveal-panel 420ms ease-out both, chroma-border 3s linear infinite;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook {
+      border: 4px solid transparent;
+      background:
+        linear-gradient(145deg, #5636c9, #241761) padding-box,
+        linear-gradient(120deg, #ff6b6b, #ffd166, #7ff0a6, #72caff, #e7a0ff, #ff6b6b) border-box;
+      background-size: 100% 100%, 300% 300%;
+      box-shadow: 0 0 25px #ff6b6b, 0 0 50px #72caff, 0 0 80px rgba(231, 160, 255, 0.85);
+      animation: reveal-chroma 1800ms cubic-bezier(0.18, 0.89, 0.32, 1.28) both, chroma-border 2.4s linear infinite;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::before,
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::after {
+      position: absolute;
+      z-index: -1;
+      inset: -20px;
+      border-radius: 50%;
+      content: "";
+      pointer-events: none;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::before {
+      background: conic-gradient(from 0deg, transparent, rgba(255, 107, 107, 0.8), transparent, rgba(114, 202, 255, 0.85), transparent, rgba(255, 209, 102, 0.8), transparent);
+      filter: blur(7px);
+      animation: chroma-rays 3s linear infinite;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::after {
+      inset: -9px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 18px #fff, inset 0 0 14px rgba(255, 255, 255, 0.65);
+      animation: chroma-ring 1.6s ease-in-out infinite alternate;
+    }
+
+    .pack-reveal[data-rarity="Chroma"] .pack-reveal-rarity {
+      background: linear-gradient(90deg, #ff6b6b, #ffd166, #7ff0a6, #72caff, #e7a0ff);
+      background-clip: text;
+      color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: chroma-glow 1.2s ease-in-out infinite alternate;
+    }
+
+    .pack-reveal-title {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .pack-reveal-rarity {
+      margin: 6px 0 14px;
+      font: bold 15px Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .pack-reveal-summary {
+      margin: 10px auto 0;
+      max-width: 650px;
+      font: 14px/1.6 Arial, sans-serif;
+    }
+
+    @keyframes reveal-blook {
+      from {
+        opacity: 0;
+        transform: scale(0.2) rotate(-35deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes reveal-panel {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes pack-opening {
+      0%, 100% { transform: scale(1) rotate(0); }
+      16%, 48%, 76% { transform: scale(0.92) rotate(-8deg); }
+      32%, 64%, 88% { transform: scale(1.08) rotate(8deg); }
+      94% { filter: brightness(2.4); transform: scale(1.35) rotate(0); }
+    }
+
+    @keyframes reveal-uncommon {
+      from { opacity: 0; transform: translateY(20px) scale(0.35); }
+      70% { transform: translateY(-6px) scale(1.12); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes reveal-rare {
+      from { opacity: 0; transform: translateY(30px) scale(0.25) rotate(-20deg); }
+      65% { opacity: 1; transform: translateY(-10px) scale(1.2) rotate(8deg); }
+      to { transform: translateY(0) scale(1) rotate(0); }
+    }
+
+    @keyframes reveal-epic {
+      from { opacity: 0; transform: scale(0.1) rotate(-120deg); }
+      65% { opacity: 1; transform: scale(1.25) rotate(12deg); }
+      82% { transform: scale(0.92) rotate(-5deg); }
+      to { transform: scale(1) rotate(0); }
+    }
+
+    @keyframes reveal-legendary {
+      0% { opacity: 0; transform: scale(0.05) rotate(-180deg); filter: brightness(3); }
+      55% { opacity: 1; transform: scale(1.35) rotate(18deg); filter: brightness(1.8); }
+      75% { transform: scale(0.9) rotate(-8deg); filter: brightness(1.2); }
+      100% { transform: scale(1) rotate(0); filter: brightness(1); }
+    }
+
+    @keyframes reveal-chroma {
+      0% { opacity: 0; transform: scale(0.02) rotate(-270deg); filter: brightness(4) saturate(2); }
+      48% { opacity: 1; transform: scale(1.5) rotate(24deg); filter: brightness(2); }
+      64% { transform: scale(0.86) rotate(-12deg); }
+      78% { transform: scale(1.18) rotate(7deg); }
+      100% { transform: scale(1) rotate(0); filter: brightness(1); }
+    }
+
+    @keyframes chroma-border {
+      to { background-position: 0 0, 300% 50%; }
+    }
+
+    @keyframes chroma-rays {
+      to { transform: rotate(360deg) scale(1.08); }
+    }
+
+    @keyframes chroma-ring {
+      from { opacity: 0.45; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1.08); }
+    }
+
+    @keyframes chroma-glow {
+      from { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5)); }
+      to { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pack-card .pack-art,
+      .pack-reveal,
+      .pack-reveal-blook,
+      .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook,
+      .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::before,
+      .pack-reveal[data-rarity="Chroma"] .pack-reveal-blook::after,
+      .pack-reveal[data-rarity="Chroma"] .pack-reveal-rarity {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .blook-pack-groups {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .blook-pack-group {
+      padding: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      background: rgba(16, 17, 48, 0.36);
+    }
+
+    .blook-pack-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      font: bold 16px Arial, sans-serif;
+    }
+
+    .blook-pack-items {
+      display: grid;
+      gap: 10px;
+    }
+
+    .blook-row-item {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .blook-row-art {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 10px;
+      background: rgba(10, 12, 35, 0.42);
+    }
+
+    .blook-row-art img,
+    .blook-row-art span {
+      display: block;
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      font-size: 28px;
+      line-height: 48px;
+      text-align: center;
+    }
+
+    .blook-row-info {
+      min-width: 0;
+    }
+
+    .blook-row-name {
+      font: bold 15px Arial, sans-serif;
+    }
+
+    .blook-row-meta {
+      display: block;
+      margin-top: 3px;
+      color: #dfe9ff;
+      font: 12px Arial, sans-serif;
+    }
+
+    .blook-row-count,
+    .blook-row-value {
+      font: bold 13px Arial, sans-serif;
+      white-space: nowrap;
+    }
+
+    .blook-row-item .blook-index-actions {
+      margin-top: 0;
+      flex-wrap: wrap;
+    }
+
+    .blook-row-value {
+      color: #f9e58e;
+    }
+
+    .blook-sell-button {
+      padding: 8px 10px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      background: rgba(61, 191, 133, 0.2);
+      color: #fff;
+      font: bold 12px Arial, sans-serif;
+      cursor: pointer;
+      box-sizing: border-box;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
+
+    .blook-row-item .blook-sell-button {
+      width: auto;
+    }
+
+    .blook-index {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .blook-index-card {
+      display: grid;
+      min-width: 0;
+      gap: 8px;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.72);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .blook-index-art {
+      display: grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(10, 12, 35, 0.42);
+      font-size: 40px;
+    }
+
+    .blook-index-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .blook-index-name {
+      font: bold 15px Arial, sans-serif;
+      text-align: center;
+    }
+
+    .blook-index-meta {
+      font: 12px Arial, sans-serif;
+      color: #dfe9ff;
+      text-align: center;
+    }
+
+    .blook-index-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      gap: 6px;
+      width: 100%;
+      min-width: 0;
+      margin-top: 4px;
+    }
+
+    .blook-index-actions .blook-row-count {
+      text-align: center;
+    }
+
+    .blook-index-actions .blook-sell-button {
+      width: 100%;
+      white-space: nowrap;
+      overflow-wrap: normal;
+    }
+
+    .collection-card {
+      padding: 14px 10px;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.12);
+      text-align: center;
+    }
+
+    .collection-card-icon {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 36px;
+    }
+
+    .collection-card strong,
+    .collection-card span {
+      display: block;
+    }
+
+    .collection-card strong {
+      font: bold 14px Arial, sans-serif;
+    }
+
+    .collection-card span:last-child {
+      margin-top: 5px;
+      font: 12px Arial, sans-serif;
+    }
+
+    .rarity-common {
+      color: #d7ecff;
+    }
+
+    .rarity-uncommon {
+      color: #7ff0a6;
+    }
+
+    .rarity-rare {
+      color: #72caff;
+    }
+
+    .rarity-epic {
+      color: #e7a0ff;
+    }
+
+    .rarity-legendary {
+      color: #ffe27a;
+      text-shadow: 0 0 10px rgba(255, 226, 122, 0.55);
+    }
+
+    .rarity-chroma {
+      background: linear-gradient(90deg, #ff6b6b, #ffd166, #7ff0a6, #72caff, #e7a0ff);
+      background-clip: text;
+      color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .rarity-mystical {
+      color: #a8f3ff;
+      text-shadow: 0 0 10px rgba(125, 108, 255, 0.9);
+    }
+
+    .arcade-game {
+      min-height: 240px;
+      padding: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      border-radius: 16px;
+      background: linear-gradient(145deg, #3869d8, #5636c9);
+      color: #fff;
+      box-shadow: 0 6px 0 rgba(35, 29, 86, 0.3);
+    }
+
+    .arcade-game h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .arcade-game p {
+      font: 14px/1.45 Arial, sans-serif;
+    }
+
+    .arcade-game .account-button,
+    .chat-form .account-button {
+      padding: 9px 16px;
+      font-size: 15px;
+    }
+
+    .quiz-prompt {
+      margin-top: 18px;
+      font: bold 17px/1.4 Arial, sans-serif;
+    }
+
+    .quiz-answers {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quiz-answer {
+      padding: 10px 12px;
+      border: 2px solid #8be9fd;
+      border-radius: 8px;
+      background: #fff;
+      color: #342080;
+      font: bold 15px Arial, sans-serif;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .quiz-answer:disabled {
+      cursor: default;
+      opacity: 0.85;
+    }
+
+    .game-feedback {
+      min-height: 1.4em;
+      font: bold 14px Arial, sans-serif;
+    }
+
+    .pop-field {
+      position: relative;
+      height: 190px;
+      margin-top: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      background: rgba(20, 20, 70, 0.35);
+    }
+
+    .pop-target {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .pop-target:hover img {
+      filter: drop-shadow(0 0 10px #fff) brightness(1.3);
+      transform: scale(1.25);
+    }
+
+    .pop-target.is-popping {
+      pointer-events: none;
+    }
+
+    .pop-target img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: shimmer 1.5s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 2px #fff);
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+
+    .pop-target.is-popping img {
+      animation: click-pop 400ms ease-out forwards;
+    }
+
+    .chat-log {
+      display: flex;
+      height: 220px;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      background: rgba(20, 20, 70, 0.55);
+      font: 14px/1.4 Arial, sans-serif;
+    }
+
+    .chat-message strong {
+      color: #8be9fd;
+    }
+
+    .chat-message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .chat-avatar {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      border-radius: 10px;
+      background: linear-gradient(145deg, #168b9d, #5636c9);
+      font-size: 22px;
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .chat-message-body {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .chat-screenshot {
+      display: block;
+      width: min(100%, 420px);
+      max-height: 320px;
+      margin-top: 8px;
+      border: 2px solid rgba(139, 233, 253, 0.8);
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .chat-message-meta {
+      color: #c6c1ed;
+      font-size: 11px;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chat-form input {
+      min-width: 0;
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #8be9fd;
+      border-radius: 8px;
+      font: 16px Arial, sans-serif;
+    }
+
+    .chat-form input[type="file"] {
+      color: #fff;
+      font: 13px Arial, sans-serif;
+    }
+
+    .chat-account-search {
+      margin-top: 12px;
+    }
+
+    .chat-account-search label {
+      display: block;
+      margin-bottom: 7px;
+      font: bold 12px Arial, sans-serif;
+      color: #d6edff;
+    }
+
+    .chat-account-search input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      background: rgba(8, 11, 34, 0.45);
+      color: #fff;
+      box-sizing: border-box;
+      font: 16px Arial, sans-serif;
+    }
+
+    .chat-mention-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chat-mention-pill {
+      padding: 6px 10px;
+      border: 2px solid rgba(139, 233, 253, 0.8);
+      border-radius: 999px;
+      background: rgba(22, 139, 157, 0.35);
+      color: #fff;
+      font: bold 12px Arial, sans-serif;
+      cursor: pointer;
+    }
+
+    .chat-mention-pill small {
+      margin-left: 5px;
+      color: #d8f6ff;
+      font-size: 11px;
+    }
+
+    .chat-message-mention {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(139, 233, 253, 0.18);
+      color: #8be9fd;
+      font-weight: 700;
+    }
+
+    .chat-note,
+    .chat-error {
+      margin: 10px 0 0;
+      font: 13px/1.4 Arial, sans-serif;
+    }
+
+    .chat-error {
+      color: #ffd2d2;
+    }
+
+    .hub-status {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(39, 27, 105, 0.35);
+      font: bold 12px Arial, sans-serif;
+    }
+
+    @media (max-width: 760px) {
+      .game-hub {
+        padding: 0;
+      }
+
+      .hub-header {
+        margin-left: 0;
+        padding: 10px 12px;
+      }
+
+      .hub-brand {
+        font-size: 16px;
+      }
+
+      .hub-header .account-button {
+        padding: 9px 14px;
+        font-size: 14px;
+      }
+
+      .arcade-section {
+        padding: 0;
+      }
+
+      .hub-workspace {
+        display: block;
+        margin: 0;
+        padding: 12px;
+      }
+
+      .hub-sidebar {
+        position: static;
+        width: auto;
+        margin: 0 -12px 18px;
+        padding: 10px 12px;
+      }
+
+      .sidebar-label {
+        margin-bottom: 8px;
+      }
+
+      .hub-nav {
+        flex-direction: row;
+      }
+
+      .hub-tab {
+        justify-content: center;
+        flex: 1;
+        gap: 6px;
+        padding: 10px 6px;
+        font-size: 14px;
+      }
+
+      .hub-tab-icon {
+        width: 25px;
+        height: 25px;
+        flex-basis: 25px;
+      }
+
+      .hub-welcome {
+        margin-bottom: 14px;
+        padding: 18px;
+      }
+
+      .profile-card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .profile-avatar {
+        width: 112px;
+        height: 112px;
+      }
+
+      .chat-form {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .blook-row-item {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 8px 10px;
+      }
+
+      .blook-row-item .blook-row-count,
+      .blook-row-item .blook-row-value,
+      .blook-row-item .blook-index-actions {
+        grid-column: 2;
+      }
+
+      .blook-row-item .blook-index-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    .form-message {
+      min-height: 1.5em;
+      margin: 14px 0 0;
+      text-align: center;
+      font: 14px Arial, sans-serif;
+    }
+
+    .falling-layer {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .falling-image {
+      position: absolute;
+      top: -120px;
+      padding: 0;
+      border: 0;
+      background: none;
+      opacity: 0.25;
+      cursor: pointer;
+      pointer-events: auto;
+      animation: fall var(--fall-duration) linear forwards;
+    }
+
+    .falling-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      animation: shimmer 1.5s ease-in-out infinite alternate;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+
+    .falling-image:hover img {
+      filter: drop-shadow(0 0 10px #fff) brightness(1.3);
+      transform: scale(1.25);
+    }
+
+    .falling-image.is-popping {
+      pointer-events: none;
+      animation-play-state: paused;
+    }
+
+    .falling-image.is-popping img {
+      animation: click-pop 400ms ease-out forwards;
+    }
+
+    @keyframes click-pop {
+      50% {
+        filter: drop-shadow(0 0 14px #fff) brightness(1.8);
+        transform: scale(1.7);
+      }
+      100% {
+        filter: drop-shadow(0 0 18px #8be9fd) brightness(2);
+        opacity: 0;
+        transform: scale(0.1);
+      }
+    }
+
+    @keyframes shimmer {
+      from {
+        filter: drop-shadow(0 0 2px #fff);
+        transform: rotate(-8deg) scale(0.95);
+      }
+      to {
+        filter: drop-shadow(0 0 8px #8be9fd);
+        transform: rotate(8deg) scale(1.05);
+      }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(calc(100vh + 140px)) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page-content" id="home-screen">
+    <img class="banner" src="https://i.yourimageshare.com/5ZqTaOE5po.png" alt="Front page banner">
+    <div class="account-buttons">
+      <button class="account-button" id="show-signup" type="button">Sign Up</button>
+      <button class="account-button" id="show-signin" type="button">Sign In</button>
+    </div>
+  </main>
+  <main class="auth-screen" id="signin-screen" hidden>
+    <div class="auth-hint">Pop the falling blooks!</div>
+    <form class="auth-card" id="auth-form">
+      <h1 id="auth-title">Sign In</h1>
+      <label for="auth-username">Username</label>
+      <input id="auth-username" name="username" type="text" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required>
+      <div id="signup-email-field" hidden>
+        <label for="auth-email">Email (optional)</label>
+        <input id="auth-email" name="email" type="email" autocomplete="email">
+        <p class="field-note">Without an email, you won’t have an email-based password recovery option.</p>
+      </div>
+      <label for="auth-password">Password</label>
+      <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required>
+      <button class="account-button" id="auth-submit" type="submit">Sign In</button>
+      <p class="form-message" id="auth-message" role="status" aria-live="polite"></p>
+      <button class="account-button" id="switch-auth-mode" type="button">Need an account? Sign Up</button>
+      <button class="account-button" id="back-home" type="button">Back</button>
+    </form>
+  </main>
+  <main class="auth-screen" id="account-screen" hidden>
+    <section class="game-hub">
+      <header class="hub-header">
+        <p class="hub-brand">BEVELIT</p>
+        <button class="account-button" id="signout-button" type="button">Sign Out</button>
+      </header>
+      <div class="hub-workspace">
+        <aside class="hub-sidebar">
+          <p class="sidebar-label">Explore</p>
+          <nav class="hub-nav" aria-label="Arcade sections">
+            <button class="hub-tab" type="button" data-section="arcade-section" aria-controls="arcade-section" aria-pressed="true"><span class="hub-tab-icon" aria-hidden="true">🎮</span>Arcade</button>
+            <button class="hub-tab" type="button" data-section="market-section" aria-controls="market-section" aria-pressed="false"><span class="hub-tab-icon" aria-hidden="true">🎁</span>Market</button>
+            <button class="hub-tab" type="button" data-section="blooks-section" aria-controls="blooks-section" aria-pressed="false"><span class="hub-tab-icon" aria-hidden="true">🧰</span>Blooks</button>
+            <button class="hub-tab" type="button" data-section="chat-section" aria-controls="chat-section" aria-pressed="false"><span class="hub-tab-icon" aria-hidden="true">💬</span>Chat room</button>
+            <button class="hub-tab" type="button" data-section="profile-section" aria-controls="profile-section" aria-pressed="false"><span class="hub-tab-icon" aria-hidden="true">👤</span>Profile</button>
+          </nav>
+        </aside>
+        <div class="hub-main">
+          <div class="hub-welcome">
+            <h1>Welcome, <span class="hub-username" id="account-username"></span>!</h1>
+            <p>This is just a project.</p>
+          </div>
+          <section class="arcade-section hub-section" id="arcade-section" aria-labelledby="arcade-title">
+        <h2 id="arcade-title">Arcade</h2>
+        <p class="arcade-description">Pick a game and see how many points you can earn!</p>
+        <div class="arcade-games">
+          <article class="arcade-game">
+            <h3>Quiz Sprint</h3>
+            <p>Answer five quick questions. How many can you get right?</p>
+            <button class="account-button" id="quiz-start" type="button">Start Quiz</button>
+            <div id="quiz-play" hidden>
+              <p class="quiz-prompt" id="quiz-prompt"></p>
+              <div class="quiz-answers" id="quiz-answers"></div>
+              <p class="game-feedback" id="quiz-feedback" role="status" aria-live="polite"></p>
+              <button class="account-button" id="quiz-next" type="button" hidden>Next</button>
+            </div>
+          </article>
+          <article class="arcade-game">
+            <h3>Blook Pop</h3>
+            <p>Pop as many blooks as you can before the timer runs out!</p>
+            <p id="pop-score" aria-live="polite">Score: 0 · Time: 15</p>
+            <button class="account-button" id="pop-start" type="button">Start Blook Pop</button>
+            <div class="pop-field" id="pop-field" hidden>
+              <button class="pop-target" id="pop-target" type="button" aria-label="Pop blook" hidden>
+                <img src="https://i.yourimageshare.com/W58cohwl9X.png" alt="">
+              </button>
+            </div>
+            <p class="game-feedback" id="pop-feedback" role="status" aria-live="polite"></p>
+          </article>
+        </div>
+          </section>
+          <section class="arcade-section hub-section" id="market-section" aria-labelledby="market-title" hidden>
+        <h2 id="market-title">Market</h2>
+        <p class="arcade-description">This is Bevelits first launch. Everything hasnt been built yet so please do not get mad at me for not finishing everything yet.</p>
+        <p class="market-wallet" id="market-wallet" aria-live="polite"></p>
+        <div class="market-packs" id="market-packs"></div>
+        <div class="pack-reveal" id="pack-reveal" role="status" aria-live="polite" hidden>
+          <p>Pack opened!</p>
+          <div class="pack-reveal-blook" id="pack-reveal-icon" aria-hidden="true"></div>
+          <h3 class="pack-reveal-title" id="pack-reveal-name"></h3>
+          <p class="pack-reveal-rarity" id="pack-reveal-rarity"></p>
+          <p class="pack-reveal-summary" id="pack-reveal-summary" hidden></p>
+        </div>
+        <p class="game-feedback" id="market-feedback" role="status" aria-live="polite"></p>
+        <h2 class="market-collection-title">My Collection</h2>
+        <p class="arcade-description">Your discoveries are saved in this browser. Play games in the Arcade to earn more tickets.</p>
+        <div class="collection-grid" id="collection-grid"></div>
+          </section>
+          <section class="arcade-section hub-section" id="blooks-section" aria-labelledby="blooks-title" hidden>
+        <h2 id="blooks-title">Blook Inventory</h2>
+        <p class="arcade-description">Organize your collection by pack, equip what you want, and sell duplicate blooks for tickets.</p>
+        <div class="blook-pack-groups" id="blook-pack-groups"></div>
+        <div class="blook-index" id="blook-index"></div>
+          </section>
+          <section class="arcade-section hub-section" id="chat-section" aria-labelledby="chat-title" hidden>
+        <h2 id="chat-title">Chat Room</h2>
+        <p class="arcade-description">Say hello to the arcade!</p>
+        <p class="arcade-description" id="chat-online-count" aria-live="polite">0 people online</p>
+        <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <form class="chat-form" id="chat-form">
+          <label for="chat-input" class="visually-hidden">Chat message</label>
+          <input id="chat-input" name="message" maxlength="300" autocomplete="off" placeholder="Write a message...">
+          <label for="chat-screenshot" class="visually-hidden">Attach a screenshot</label>
+          <input id="chat-screenshot" name="screenshot" type="file" accept="image/png,image/jpeg,image/webp">
+          <button class="account-button" type="submit">Send</button>
+        </form>
+        <p class="chat-note" id="chat-screenshot-note" aria-live="polite">Screenshot sharing requires admin permission. PNG, JPEG, or WebP up to 5 MB.</p>
+        <div class="screenshot-request-box" id="screenshot-request-box">
+          <h3>Request screenshot access</h3>
+          <p class="chat-note">Ask an admin to let you share images in chat.</p>
+          <label for="screenshot-request-message">Message to the admin (optional)</label>
+          <textarea id="screenshot-request-message" maxlength="300" placeholder="Why would you like to share screenshots?"></textarea>
+          <button class="account-button" id="screenshot-request-submit" type="button">Send request</button>
+          <p class="screenshot-request-status" id="screenshot-request-status" role="status" aria-live="polite"></p>
+        </div>
+        <div class="chat-account-search">
+          <label for="chat-account-search">Search or mention users</label>
+          <input id="chat-account-search" type="text" autocomplete="off" placeholder="Type @ or search a username">
+          <div class="chat-mention-list" id="chat-mention-list" hidden></div>
+        </div>
+        <p class="chat-note">Messages are saved on the Bevelit server and appear for everyone signed in.</p>
+        <p class="chat-error" id="chat-error" role="status" aria-live="polite"></p>
+          </section>
+          <section class="arcade-section hub-section" id="profile-section" aria-labelledby="profile-title" hidden>
+        <h2 id="profile-title">My Profile</h2>
+        <p class="arcade-description">Choose an owned blook to wear as your profile picture. It will appear beside your chat messages.</p>
+        <div class="profile-card">
+          <div class="profile-avatar" id="profile-avatar" aria-hidden="true"></div>
+          <div>
+            <h3 class="profile-avatar-name" id="profile-avatar-name">No blook equipped</h3>
+            <p class="profile-avatar-rarity" id="profile-avatar-rarity"></p>
+            <div class="profile-badges" id="profile-badges" aria-live="polite"></div>
+            <p class="arcade-description">Signed in as <strong id="profile-username"></strong></p>
+          </div>
+        </div>
+        <div class="admin-panel" id="admin-panel" hidden>
+          <h3>Admin tools</h3>
+          <div class="admin-grid">
+            <label>
+              Target username
+              <input id="admin-target-username" type="text" placeholder="someone else" autocomplete="off">
+            </label>
+            <label>
+              Action
+              <select id="admin-action">
+                <option value="give-blook">Give blook</option>
+                <option value="take-blook">Take blook</option>
+                <option value="give-tickets">Give tickets</option>
+                <option value="take-tickets">Take tickets</option>
+                <option value="give-badge">Give badge</option>
+                <option value="take-badge">Take badge</option>
+                <option value="mute">Mute user</option>
+                <option value="ban">Ban user</option>
+                <option value="day-one">Give Day One blook</option>
+                <option value="grant-screenshot-sharing">Allow screenshot sharing</option>
+                <option value="revoke-screenshot-sharing">Remove screenshot sharing</option>
+              </select>
+            </label>
+            <label id="admin-blook-row">
+              Blook
+              <select id="admin-blook-id"></select>
+            </label>
+            <label id="admin-ticket-row" hidden>
+              Ticket amount
+              <input id="admin-ticket-amount" type="number" min="1" value="25">
+            </label>
+            <label id="admin-badge-row" hidden>
+              Badge name
+              <input id="admin-badge-name" type="text" placeholder="Staff, Builder, Helper" autocomplete="off">
+            </label>
+            <label id="admin-duration-row">
+              Duration
+              <input id="admin-duration" type="number" min="1" value="15">
+            </label>
+            <label id="admin-unit-row">
+              Unit
+              <select id="admin-duration-unit">
+                <option value="minutes">Minutes</option>
+                <option value="hours">Hours</option>
+                <option value="days">Days</option>
+              </select>
+            </label>
+          </div>
+          <div class="admin-controls">
+            <button class="account-button" id="admin-run-action" type="button">Apply action</button>
+          </div>
+          <p class="admin-feedback" id="admin-feedback" role="status" aria-live="polite"></p>
+          <section class="screenshot-admin-requests" aria-labelledby="screenshot-admin-requests-title">
+            <h4 id="screenshot-admin-requests-title">Screenshot access requests</h4>
+            <div class="admin-controls">
+              <button class="account-button" id="refresh-screenshot-requests" type="button">Refresh requests</button>
+            </div>
+            <div id="screenshot-admin-requests-list" aria-live="polite"></div>
+            <p class="admin-feedback" id="screenshot-admin-request-feedback" role="status" aria-live="polite"></p>
+          </section>
+        </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="falling-layer" id="falling-layer"></div>
+  <script type="module">
+    const SUPABASE_URL = "https://rcgfigzhytyhxromsjvt.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_WGglQHA5zL3VFCzN9WQwzw_1ROw5Zb-";
+    const starterBlookImageUrl = "https://i.yourimageshare.com/dy8pWEUxdu.jpg";
+    const fallingLayer = document.getElementById("falling-layer");
+    const fallingImageUrl = "https://i.yourimageshare.com/W58cohwl9X.png";
+    const homeScreen = document.getElementById("home-screen");
+    const signinScreen = document.getElementById("signin-screen");
+    const accountScreen = document.getElementById("account-screen");
+    const authForm = document.getElementById("auth-form");
+    const authMessage = document.getElementById("auth-message");
+    const signupEmailField = document.getElementById("signup-email-field");
+    const authTitle = document.getElementById("auth-title");
+    const authSubmit = document.getElementById("auth-submit");
+    const switchAuthMode = document.getElementById("switch-auth-mode");
+    const marketWallet = document.getElementById("market-wallet");
+    const marketPacksContainer = document.getElementById("market-packs");
+    const collectionGrid = document.getElementById("collection-grid");
+    const blookPackGroups = document.getElementById("blook-pack-groups");
+    const blookIndex = document.getElementById("blook-index");
+    const marketFeedback = document.getElementById("market-feedback");
+    const packReveal = document.getElementById("pack-reveal");
+    const packRevealIcon = document.getElementById("pack-reveal-icon");
+    const packRevealName = document.getElementById("pack-reveal-name");
+    const packRevealRarity = document.getElementById("pack-reveal-rarity");
+    const packRevealSummary = document.getElementById("pack-reveal-summary");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const chatScreenshotInput = document.getElementById("chat-screenshot");
+    const chatScreenshotNote = document.getElementById("chat-screenshot-note");
+    const screenshotRequestBox = document.getElementById("screenshot-request-box");
+    const screenshotRequestMessage = document.getElementById("screenshot-request-message");
+    const screenshotRequestSubmit = document.getElementById("screenshot-request-submit");
+    const screenshotRequestStatus = document.getElementById("screenshot-request-status");
+    const screenshotAdminRequestsList = document.getElementById("screenshot-admin-requests-list");
+    const screenshotAdminRequestFeedback = document.getElementById("screenshot-admin-request-feedback");
+    const chatLog = document.getElementById("chat-log");
+    const chatError = document.getElementById("chat-error");
+    const chatOnlineCount = document.getElementById("chat-online-count");
+    const chatAccountSearch = document.getElementById("chat-account-search");
+    const chatMentionList = document.getElementById("chat-mention-list");
+    const onlineUsersStorageKey = "bevelit-online-users";
+    let authMode = "signin";
+    let currentAccountUsername = "";
+    let currentAccountUserId = null;
+    let currentAccountRole = "player";
+    let currentCanShareScreenshots = false;
+    let supabase;
+    let chatRealtimeChannel;
+    let chatMessages = [];
+    const supabaseConfigured =
+      !SUPABASE_URL.includes("PASTE_") &&
+      !SUPABASE_ANON_KEY.includes("PASTE_");
+    if (supabaseConfigured) {
+      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+      supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    async function hashString(value) {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest("SHA-256", bytes);
+      return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    function getLocalUsers() {
+      try {
+        const users = JSON.parse(localStorage.getItem("bevelit-users") || "[]");
+        return Array.isArray(users) ? users : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLocalUsers(users) {
+      localStorage.setItem("bevelit-users", JSON.stringify(users));
+    }
+
+    function getSavedSession() {
+      try {
+        return JSON.parse(sessionStorage.getItem("bevelit-session") || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function saveSession(username) {
+      sessionStorage.setItem("bevelit-session", JSON.stringify({ username }));
+    }
+
+    function clearSession() {
+      sessionStorage.removeItem("bevelit-session");
+    }
+
+    function showScreen(screen) {
+      homeScreen.hidden = screen !== homeScreen;
+      signinScreen.hidden = screen !== signinScreen;
+      accountScreen.hidden = screen !== accountScreen;
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      const signingUp = mode === "signup";
+      authTitle.textContent = signingUp ? "Create Account" : "Sign In";
+      authSubmit.textContent = signingUp ? "Create Account" : "Sign In";
+      signupEmailField.hidden = !signingUp;
+      switchAuthMode.textContent = signingUp
+        ? "Already have an account? Sign In"
+        : "Need an account? Sign Up";
+      document.getElementById("auth-password").autocomplete =
+        signingUp ? "new-password" : "current-password";
+      authMessage.textContent = "";
+      authForm.reset();
+    }
+
+    function normalizeUsername(value) {
+      return String(value || "").trim();
+    }
+
+    function getPlayerProfiles() {
+      try {
+        const profiles = JSON.parse(localStorage.getItem("bevelit-player-profiles") || "{}");
+        return profiles && typeof profiles === "object" ? profiles : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function savePlayerProfiles(profiles) {
+      localStorage.setItem("bevelit-player-profiles", JSON.stringify(profiles));
+    }
+
+    function getPlayerProfile(username) {
+      const cleanedName = normalizeUsername(username);
+      if (!cleanedName) {
+        return { username: "player", role: "player", badges: [], mutedUntil: null, bannedUntil: null };
+      }
+      const key = cleanedName.toLowerCase();
+      const profiles = getPlayerProfiles();
+      if (!profiles[key]) {
+        profiles[key] = {
+          username: cleanedName,
+          role: cleanedName.toLowerCase() === "orange" ? "owner" : "player",
+          badges: cleanedName.toLowerCase() === "orange" ? ["Owner"] : [],
+          mutedUntil: null,
+          bannedUntil: null
+        };
+        savePlayerProfiles(profiles);
+      }
+      const profile = profiles[key];
+      if (cleanedName.toLowerCase() === "orange") {
+        profile.username = cleanedName;
+        profile.role = "owner";
+        if (!profile.badges.includes("Owner")) {
+          profile.badges = [...new Set(["Owner", ...profile.badges])];
+        }
+      } else if (cleanedName.toLowerCase() === "testboy") {
+        profile.username = cleanedName;
+        profile.role = "admin";
+        profile.badges = [...new Set([...(Array.isArray(profile.badges) ? profile.badges : []), "ADMIN"])];
+        profiles[key] = profile;
+        savePlayerProfiles(profiles);
+      }
+      return profile;
+    }
+
+    function isOwnerAccount(username) {
+      if (supabaseConfigured && normalizeUsername(username).toLowerCase() === currentAccountUsername.toLowerCase()) {
+        return currentAccountRole === "owner" || currentAccountRole === "admin";
+      }
+      const profile = getPlayerProfile(username);
+      return profile.role === "owner" || profile.role === "admin";
+    }
+
+    function getBadgeList(username) {
+      const profile = getPlayerProfile(username);
+      return Array.isArray(profile.badges) ? profile.badges.filter(Boolean) : [];
+    }
+
+    function addBadgeToUser(username, badgeName) {
+      const cleanedName = normalizeUsername(username);
+      const badge = String(badgeName || "").trim();
+      if (!cleanedName || !badge) {
+        return false;
+      }
+      const profiles = getPlayerProfiles();
+      const key = cleanedName.toLowerCase();
+      const profile = profiles[key] || { username: cleanedName, role: "player", badges: [], mutedUntil: null, bannedUntil: null };
+      profile.username = cleanedName;
+      profile.badges = [...new Set([...(Array.isArray(profile.badges) ? profile.badges : []), badge])];
+      profiles[key] = profile;
+      savePlayerProfiles(profiles);
+      return true;
+    }
+
+    function removeBadgeFromUser(username, badgeName) {
+      const cleanedName = normalizeUsername(username);
+      const badge = String(badgeName || "").trim();
+      if (!cleanedName || !badge) {
+        return false;
+      }
+      const profiles = getPlayerProfiles();
+      const key = cleanedName.toLowerCase();
+      if (!profiles[key]) {
+        return false;
+      }
+      profiles[key].badges = (Array.isArray(profiles[key].badges) ? profiles[key].badges : []).filter((entry) => entry !== badge);
+      savePlayerProfiles(profiles);
+      return true;
+    }
+
+    function setUserRestriction(username, kind, durationMs) {
+      const cleanedName = normalizeUsername(username);
+      if (!cleanedName) {
+        return false;
+      }
+      const profiles = getPlayerProfiles();
+      const key = cleanedName.toLowerCase();
+      const profile = profiles[key] || { username: cleanedName, role: "player", badges: [], mutedUntil: null, bannedUntil: null };
+      profile.username = cleanedName;
+      if (kind === "mute") {
+        profile.mutedUntil = durationMs ? new Date(Date.now() + durationMs).toISOString() : null;
+        profile.bannedUntil = null;
+      } else if (kind === "ban") {
+        profile.bannedUntil = durationMs ? new Date(Date.now() + durationMs).toISOString() : null;
+        profile.mutedUntil = null;
+      }
+      profiles[key] = profile;
+      savePlayerProfiles(profiles);
+      return true;
+    }
+
+    function getRestrictionStatus(username) {
+      const profile = getPlayerProfile(username);
+      const now = Date.now();
+      const muteUntil = profile.mutedUntil ? new Date(profile.mutedUntil).getTime() : 0;
+      const banUntil = profile.bannedUntil ? new Date(profile.bannedUntil).getTime() : 0;
+      return {
+        muted: muteUntil > now,
+        mutedUntil: muteUntil > now ? profile.mutedUntil : null,
+        banned: banUntil > now,
+        bannedUntil: banUntil > now ? profile.bannedUntil : null
+      };
+    }
+
+    function ensureDayOneBlook(username) {
+      const cleanedName = normalizeUsername(username);
+      if (!cleanedName) {
+        return false;
+      }
+      const state = loadMarketState(cleanedName);
+      if (!state.owned.includes("day-one")) {
+        state.owned.push("day-one");
+      }
+      saveMarketState(state, cleanedName);
+      addBadgeToUser(cleanedName, "Day One");
+      return true;
+    }
+
+    function ensureBevelitBotBlook(username) {
+      const cleanedName = normalizeUsername(username);
+      if (cleanedName.toLowerCase() !== "testboy") {
+        return false;
+      }
+      const state = loadMarketState(cleanedName);
+      if (!state.owned.includes("bevelit-bot")) {
+        state.owned.push("bevelit-bot");
+      }
+      if (!state.equipped) {
+        state.equipped = "bevelit-bot";
+      }
+      addBadgeToUser(cleanedName, "TESTER");
+      addBadgeToUser(cleanedName, "ADMIN");
+      return saveMarketState(state, cleanedName);
+    }
+
+    function updateScreenshotRequestBox(request) {
+      if (currentCanShareScreenshots) {
+        screenshotRequestBox.hidden = true;
+        return;
+      }
+
+      screenshotRequestBox.hidden = false;
+      if (!supabaseConfigured || !supabase || !currentAccountUserId) {
+        screenshotRequestSubmit.disabled = true;
+        screenshotRequestStatus.textContent = "Sign in with a Bevelit account to request screenshot access.";
+        return;
+      }
+
+      if (request?.status === "pending") {
+        screenshotRequestSubmit.disabled = true;
+        screenshotRequestStatus.textContent = "Your request is waiting for an admin to review it.";
+      } else {
+        screenshotRequestSubmit.disabled = false;
+        screenshotRequestStatus.textContent = request?.status === "denied"
+          ? "Your last request was denied. You may send a new request."
+          : request?.status === "approved"
+            ? "A previous request was approved, but screenshot access is currently off."
+            : "No request has been sent yet.";
+      }
+    }
+
+    async function loadScreenshotRequestStatus() {
+      if (!supabaseConfigured || !supabase || !currentAccountUserId) {
+        updateScreenshotRequestBox(null);
+        return;
+      }
+
+      const { data: request, error } = await supabase
+        .from("screenshot_sharing_requests")
+        .select("status, created_at")
+        .eq("user_id", currentAccountUserId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Could not load screenshot access request status.", error);
+        screenshotRequestSubmit.disabled = true;
+        screenshotRequestStatus.textContent = "Could not load request status. Check that the screenshot request migration is deployed.";
+        return;
+      }
+      updateScreenshotRequestBox(request);
+    }
+
+    screenshotRequestSubmit.addEventListener("click", async () => {
+      if (!supabaseConfigured || !supabase) {
+        screenshotRequestStatus.textContent = "Screenshot access requests require the Bevelit Supabase project.";
+        return;
+      }
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        console.error("Could not verify sign-in before requesting screenshot access.", sessionError);
+        screenshotRequestStatus.textContent = "Sign in with a Bevelit account before sending a request.";
+        return;
+      }
+
+      const requestMessage = screenshotRequestMessage.value.trim();
+      if (requestMessage.length > 300) {
+        screenshotRequestStatus.textContent = "Keep your note to 300 characters or fewer.";
+        return;
+      }
+
+      screenshotRequestSubmit.disabled = true;
+      const { data: request, error } = await supabase
+        .from("screenshot_sharing_requests")
+        .insert({
+          user_id: sessionData.session.user.id,
+          request_message: requestMessage || null
+        })
+        .select("status, created_at")
+        .single();
+
+      if (error) {
+        console.error("Could not send screenshot access request.", error);
+        screenshotRequestSubmit.disabled = false;
+        if (error.code === "23505") {
+          screenshotRequestStatus.textContent = "You already have a pending request.";
+          await loadScreenshotRequestStatus();
+        } else {
+          screenshotRequestStatus.textContent = "Could not send your request. Check that the screenshot request migration is deployed.";
+        }
+        return;
+      }
+
+      screenshotRequestMessage.value = "";
+      updateScreenshotRequestBox(request);
+    });
+
+    async function showAccount(username) {
+      const cleanedName = normalizeUsername(username);
+      currentAccountUsername = cleanedName;
+      currentAccountUserId = null;
+      currentAccountRole = "player";
+      currentCanShareScreenshots = false;
+      if (supabaseConfigured && supabase) {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.error("Could not load account permissions.", sessionError);
+          chatError.textContent = "Could not verify your account permissions. Please sign in again.";
+        } else if (sessionData.session) {
+          currentAccountUserId = sessionData.session.user.id;
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("username, role, can_share_screenshots")
+            .eq("id", sessionData.session.user.id)
+            .maybeSingle();
+          if (profileError) {
+            console.error("Could not load account permissions.", profileError);
+            chatError.textContent = "Could not load account permissions. Apply the screenshot-sharing database migration.";
+          } else if (profile) {
+            currentAccountUsername = profile.username;
+            currentAccountRole = profile.role;
+            currentCanShareScreenshots = profile.can_share_screenshots;
+          } else {
+            console.error("The signed-in account does not have a Bevelit profile.");
+            chatError.textContent = "Your account profile could not be found.";
+          }
+        }
+      } else {
+        currentAccountRole = getPlayerProfile(cleanedName).role;
+      }
+      const accountUsername = document.getElementById("account-username");
+      accountUsername.textContent = currentAccountUsername;
+      accountUsername.classList.toggle("testboy-account-name", currentAccountUsername.toLowerCase() === "testboy");
+      await syncMarketStateFromCloud(currentAccountUsername);
+      setUserOnline(currentAccountUsername, true);
+      if (chatScreenshotNote) {
+        chatScreenshotNote.textContent = currentCanShareScreenshots
+          ? "You have permission to share screenshots. PNG, JPEG, or WebP up to 5 MB."
+          : "Ask an admin to enable screenshot sharing. PNG, JPEG, or WebP up to 5 MB.";
+      }
+      void loadScreenshotRequestStatus();
+      void connectToChat();
+      window.setTimeout(() => {
+        if (currentAccountUsername.toLowerCase() === cleanedName.toLowerCase()
+          && ensureBevelitBotBlook(currentAccountUsername)) {
+          renderProfile();
+        }
+      }, 0);
+      if (currentAccountUsername.toLowerCase() === "orange") {
+        const profiles = getPlayerProfiles();
+        const profile = profiles[currentAccountUsername.toLowerCase()] || { username: currentAccountUsername, role: "player", badges: [], mutedUntil: null, bannedUntil: null };
+        profile.username = currentAccountUsername;
+        profile.role = "owner";
+        profile.badges = [...new Set([...(Array.isArray(profile.badges) ? profile.badges : []), "Owner"])];
+        profiles[currentAccountUsername.toLowerCase()] = profile;
+        savePlayerProfiles(profiles);
+        ensureDayOneBlook(currentAccountUsername);
+      }
+      showScreen(accountScreen);
+      if (document.readyState === "complete") {
+        const ownerTabs = Array.from(document.querySelectorAll(".hub-tab"));
+        const profileTab = ownerTabs.find((tab) => tab.dataset.section === "profile-section");
+        if (profileTab) {
+          profileTab.click();
+        }
+      }
+    }
+
+    document.getElementById("show-signin").addEventListener("click", () => {
+      setAuthMode("signin");
+      showScreen(signinScreen);
+    });
+
+    document.getElementById("show-signup").addEventListener("click", () => {
+      setAuthMode("signup");
+      showScreen(signinScreen);
+    });
+
+    switchAuthMode.addEventListener("click", () => {
+      setAuthMode(authMode === "signin" ? "signup" : "signin");
+    });
+
+    document.getElementById("back-home").addEventListener("click", () => {
+      showScreen(homeScreen);
+    });
+
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(authForm);
+      const username = String(formData.get("username") || "").trim();
+      const password = String(formData.get("password") || "");
+      const email = authMode === "signup" ? String(formData.get("email") || "").trim() : "";
+      const submitLabel = authSubmit.textContent;
+      authSubmit.disabled = true;
+      authSubmit.textContent = "Please wait...";
+      authMessage.textContent = "";
+
+      try {
+        if (!supabaseConfigured) {
+          const users = getLocalUsers();
+
+          if (authMode === "signup") {
+            if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) {
+              throw new Error("Username must be 3–24 letters, numbers, or underscores.");
+            }
+            if (password.length < 8 || password.length > 72) {
+              throw new Error("Password must be between 8 and 72 characters.");
+            }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              throw new Error("Enter a valid email address or leave it blank.");
+            }
+            if (users.some((user) => user.username.toLowerCase() === username.toLowerCase())) {
+              throw new Error("That username is already taken.");
+            }
+
+            const hashedPassword = await hashString(password);
+            users.push({ username, password: hashedPassword, email: email || null });
+            saveLocalUsers(users);
+            saveSession(username);
+            currentAccountUsername = username;
+            setUserOnline(username, true);
+            showAccount(username);
+            return;
+          }
+
+          const existingUser = users.find((user) => user.username.toLowerCase() === username.toLowerCase());
+          if (!existingUser) {
+            throw new Error("Invalid username or password.");
+          }
+
+          const hashedPassword = await hashString(password);
+          if (existingUser.password !== hashedPassword) {
+            throw new Error("Invalid username or password.");
+          }
+
+          saveSession(username);
+          currentAccountUsername = username;
+          setUserOnline(username, true);
+          showAccount(username);
+          return;
+        }
+
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/username-auth`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({
+            action: authMode,
+            username: username,
+            password,
+            email: authMode === "signup" ? (email || null) : null
+          })
+        });
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Could not complete the request. Please try again.");
+        }
+
+        const { error } = await supabase.auth.setSession(result.session);
+        if (error) {
+          throw new Error("Your account was created, but sign-in could not be completed. Please sign in.");
+        }
+        saveSession(result.username);
+        currentAccountUsername = result.username;
+        setUserOnline(result.username, true);
+        showAccount(result.username);
+      } catch (error) {
+        authMessage.textContent = error instanceof Error
+          ? error.message
+          : "Could not connect. Check your internet connection and try again.";
+      } finally {
+        authSubmit.disabled = false;
+        authSubmit.textContent = submitLabel;
+      }
+    });
+
+    document.getElementById("signout-button").addEventListener("click", async () => {
+      if (supabaseConfigured) {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          window.alert("Sign-out failed. Please try again.");
+          return;
+        }
+        if (chatRealtimeChannel) {
+          await supabase.removeChannel(chatRealtimeChannel);
+          chatRealtimeChannel = undefined;
+        }
+      }
+      setUserOnline(currentAccountUsername, false);
+      clearSession();
+      currentAccountUsername = "";
+      currentAccountUserId = null;
+      showScreen(homeScreen);
+    });
+
+    const savedSession = getSavedSession();
+    if (savedSession && savedSession.username) {
+      currentAccountUsername = savedSession.username;
+      setUserOnline(savedSession.username, true);
+      showAccount(savedSession.username);
+    } else if (supabaseConfigured) {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        authMessage.textContent = "Could not restore your sign-in. Please sign in again.";
+      } else if (data.session) {
+        const restoredUser = data.session.user.user_metadata.username || "player";
+        currentAccountUsername = restoredUser;
+        setUserOnline(restoredUser, true);
+        showAccount(restoredUser);
+      }
+    }
+
+    const sectionTabs = Array.from(document.querySelectorAll(".hub-tab"));
+    sectionTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const selectedSection = tab.dataset.section;
+        sectionTabs.forEach((sectionTab) => {
+          sectionTab.setAttribute("aria-pressed", String(sectionTab === tab));
+          document.getElementById(sectionTab.dataset.section).hidden =
+            sectionTab.dataset.section !== selectedSection;
+        });
+        if (selectedSection === "market-section") {
+          renderMarket();
+        } else if (selectedSection === "blooks-section") {
+          renderBlookSection();
+        } else if (selectedSection === "chat-section") {
+          void loadChatMessages();
+        } else if (selectedSection === "profile-section") {
+          renderProfile();
+        }
+      });
+    });
+
+    const packCatalog = [
+      { id: "starter", name: "GameMode Pack", icon: "🎮", price: 10, odds: { Common: 60, Uncommon: 25, Rare: 10, Epic: 4, Legendary: 0.9, Chroma: 0.1 } },
+      { id: "arcade", name: "Arcade Pack", icon: "🕹️", price: 25, odds: { Common: 45, Uncommon: 30, Rare: 16, Epic: 7, Legendary: 1.8, Chroma: 0.2, Mystical: 0.0 } },
+      { id: "cosmic", name: "Cosmic Pack", icon: "🌠", price: 50, odds: { Common: 30, Uncommon: 30, Rare: 22, Epic: 12, Legendary: 5, Chroma: 1 } }
+    ];
+    const blookCatalog = [
+      { id: "sunny", name: "Sunny", icon: "☀️", rarity: "Common", packId: "starter" },
+      { id: "cloudlet", name: "Cloudlet", icon: "☁️", rarity: "Common", packId: "starter" },
+      { id: "berry", name: "Berry", icon: "🍓", rarity: "Common", packId: "starter" },
+      { id: "pebble", name: "Pebble", icon: "🪨", rarity: "Common", packId: "starter" },
+      { id: "star", name: "Star", icon: "⭐", rarity: "Uncommon", packId: "starter" },
+      { id: "lime", name: "Lime", icon: "🍋", rarity: "Uncommon", packId: "starter" },
+      { id: "robopup", name: "Robo Pup", icon: "🤖", rarity: "Uncommon", packId: "starter" },
+      { id: "crystal", name: "Crystal", icon: "💎", rarity: "Rare", packId: "starter" },
+      { id: "frostfox", name: "Frost Fox", icon: "🦊", rarity: "Rare", packId: "starter" },
+      { id: "starwhale", name: "Star Whale", icon: "🐳", rarity: "Rare", packId: "starter" },
+      { id: "phoenix", name: "Phoenix", icon: "🔥", rarity: "Epic", packId: "starter" },
+      { id: "galaxycat", name: "Galaxy Cat", icon: "🐈‍⬛", rarity: "Epic", packId: "starter" },
+      { id: "crowndragon", name: "Crown Dragon", icon: "🐉", rarity: "Legendary", packId: "starter" },
+      { id: "snake-escape", name: "Snake Escape", imageUrl: "https://i.yourimageshare.com/5lh78Wpvja.png", rarity: "Chroma", packId: "starter" },
+      { id: "day-one", name: "Day One", icon: "🎉", imageUrl: "https://i.yourimageshare.com/HEj6Aj0mzx.png", rarity: "Legendary", packId: "starter" },
+      { id: "bevelit-bot", name: "Bevelit Bot", imageUrl: "https://i.yourimageshare.com/2qveikwfh9.png", rarity: "Mystical", packId: "arcade" }
+    ];
+    const rarityOrder = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Chroma", "Mystical"];
+    let packOpening = false;
+    let autoOpening = false;
+    let autoOpenStopRequested = false;
+    let autoOpenPackId = null;
+
+    function marketStorageKey(username = document.getElementById("account-username").textContent) {
+      const cleanUsername = normalizeUsername(username || "player").toLowerCase() || "player";
+      return `bevelit-market-${cleanUsername}`;
+    }
+
+    function normalizeMarketState(state = {}) {
+      const owned = Array.isArray(state.owned)
+        ? [...new Set(state.owned.filter((itemId) => typeof itemId === "string" && blookCatalog.some((item) => item.id === itemId)))]
+        : [];
+      const equipped = typeof state.equipped === "string" && owned.includes(state.equipped) && blookCatalog.some((item) => item.id === state.equipped)
+        ? state.equipped
+        : null;
+      const tickets = Number.isFinite(state.tickets) ? Math.max(0, Math.trunc(state.tickets)) : 25;
+      return { tickets, owned, equipped };
+    }
+
+    function loadMarketState(username = document.getElementById("account-username").textContent) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(marketStorageKey(username)) || "null");
+        if (saved && typeof saved === "object") {
+          return normalizeMarketState(saved);
+        }
+      } catch {
+        marketFeedback.textContent = "Could not load your market items from this browser.";
+      }
+      return { tickets: 25, owned: [], equipped: null };
+    }
+
+    function saveMarketState(state, username = document.getElementById("account-username").textContent) {
+      try {
+        const normalizedState = normalizeMarketState(state);
+        localStorage.setItem(marketStorageKey(username), JSON.stringify(normalizedState));
+        persistMarketStateToCloud(normalizedState, username);
+        return true;
+      } catch {
+        marketFeedback.textContent = "Could not save your market items. Browser storage may be full or disabled.";
+        return false;
+      }
+    }
+
+    const marketStateSaveQueues = new Map();
+
+    function persistMarketStateToCloud(state, username) {
+      if (!supabaseConfigured || !supabase || !currentAccountUserId
+        || normalizeUsername(username).toLowerCase() !== currentAccountUsername.toLowerCase()) {
+        return;
+      }
+
+      const previousSave = marketStateSaveQueues.get(currentAccountUserId) || Promise.resolve();
+      const userId = currentAccountUserId;
+      const nextSave = previousSave.then(async () => {
+        if (currentAccountUserId !== userId
+          || normalizeUsername(username).toLowerCase() !== currentAccountUsername.toLowerCase()) {
+          return;
+        }
+        const { error } = await supabase.rpc("save_my_market_state", {
+          p_tickets: state.tickets,
+          p_owned: state.owned,
+          p_equipped: state.equipped
+        });
+        if (error) {
+          console.error("Could not save market state to the account.", error);
+          marketFeedback.textContent = "Could not sync your market items. Check that the market-state migration is deployed.";
+        }
+      }).catch((error) => {
+        console.error("Could not save market state to the account.", error);
+        marketFeedback.textContent = "Could not sync your market items. Check your connection and try again.";
+      });
+      marketStateSaveQueues.set(currentAccountUserId, nextSave);
+    }
+
+    async function syncMarketStateFromCloud(username) {
+      if (!supabaseConfigured || !supabase || !currentAccountUserId) {
+        return;
+      }
+
+      const userId = currentAccountUserId;
+      const { data: savedState, error } = await supabase
+        .from("player_market_state")
+        .select("tickets, owned, equipped")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (error) {
+        console.error("Could not load market state from the account.", error);
+        marketFeedback.textContent = "Could not load synced market items. Check that the market-state migration is deployed.";
+        return;
+      }
+
+      if (savedState) {
+        const normalizedState = normalizeMarketState(savedState);
+        try {
+          localStorage.setItem(marketStorageKey(username), JSON.stringify(normalizedState));
+        } catch (storageError) {
+          console.error("Could not cache the synced market state.", storageError);
+          marketFeedback.textContent = "Your market items loaded, but could not be cached in this browser.";
+        }
+        return;
+      }
+
+      if (currentAccountUserId !== userId) {
+        return;
+      }
+      const localState = loadMarketState(username);
+      const { error: saveError } = await supabase.rpc("save_my_market_state", {
+        p_tickets: localState.tickets,
+        p_owned: localState.owned,
+        p_equipped: localState.equipped
+      });
+      if (saveError) {
+        console.error("Could not initialize the account market state.", saveError);
+        marketFeedback.textContent = "Could not sync your market items. Check that the market-state migration is deployed.";
+      }
+    }
+
+    function renderMarket() {
+      const state = loadMarketState();
+      marketWallet.textContent = `Tickets: ${state.tickets}`;
+      marketPacksContainer.replaceChildren();
+      packCatalog.forEach((pack) => {
+        const card = document.createElement("article");
+        card.className = "pack-card";
+        card.dataset.pack = pack.id;
+        const art = document.createElement("div");
+        art.className = "pack-art";
+        art.setAttribute("aria-hidden", "true");
+        art.textContent = pack.icon;
+        const name = document.createElement("h3");
+        name.textContent = pack.name;
+        const odds = document.createElement("p");
+        odds.className = "pack-odds";
+        odds.textContent = rarityOrder
+          .filter((rarity) => typeof pack.odds[rarity] === "number")
+          .map((rarity) => `${rarity} ${rarity === "Mystical" ? pack.odds[rarity].toFixed(1) : pack.odds[rarity]}%`)
+          .join(" · ");
+        const affordableCount = Math.floor(state.tickets / pack.price);
+        const controls = document.createElement("div");
+        controls.className = "pack-open-controls";
+
+        const singleButton = document.createElement("button");
+        singleButton.className = "account-button pack-open-single";
+        singleButton.type = "button";
+        singleButton.textContent = `Open 1 · ${pack.price} tickets`;
+        singleButton.disabled = packOpening || affordableCount < 1;
+        singleButton.addEventListener("click", () => openPack(pack));
+        controls.appendChild(singleButton);
+
+        const countLabel = document.createElement("label");
+        countLabel.className = "pack-auto-count";
+        countLabel.textContent = "Auto-open count";
+        const countInput = document.createElement("input");
+        countInput.type = "number";
+        countInput.min = "1";
+        countInput.max = String(Math.max(1, affordableCount));
+        countInput.value = String(Math.min(5, Math.max(1, affordableCount)));
+        countInput.step = "1";
+        countInput.setAttribute("aria-label", `${pack.name} auto-open count`);
+        countInput.disabled = packOpening;
+        countLabel.appendChild(countInput);
+        controls.appendChild(countLabel);
+
+        if (autoOpening && autoOpenPackId === pack.id) {
+          const stopButton = document.createElement("button");
+          stopButton.className = "account-button pack-open-stop";
+          stopButton.type = "button";
+          stopButton.textContent = "Stop Auto Open";
+          stopButton.addEventListener("click", () => {
+            autoOpenStopRequested = true;
+            stopButton.disabled = true;
+            stopButton.textContent = "Stopping...";
+          });
+          controls.appendChild(stopButton);
+        } else {
+          const autoButton = document.createElement("button");
+          autoButton.className = "account-button pack-open-auto";
+          autoButton.type = "button";
+          autoButton.textContent = "Auto Open";
+          autoButton.disabled = packOpening || affordableCount < 1;
+          autoButton.addEventListener("click", () => {
+            startAutoOpen(pack, Number(countInput.value));
+          });
+          controls.appendChild(autoButton);
+
+          const maxButton = document.createElement("button");
+          maxButton.className = "account-button pack-open-max";
+          maxButton.type = "button";
+          maxButton.textContent = affordableCount > 1 ? `Open Max · ${affordableCount}` : "Open Max";
+          maxButton.disabled = packOpening || affordableCount < 1;
+          maxButton.addEventListener("click", () => openMaxPacks(pack));
+          controls.appendChild(maxButton);
+        }
+
+        card.append(art, name, odds, controls);
+        marketPacksContainer.appendChild(card);
+      });
+
+      collectionGrid.replaceChildren();
+      const ownedCounts = new Map();
+      state.owned.forEach((itemId) => {
+        ownedCounts.set(itemId, (ownedCounts.get(itemId) || 0) + 1);
+      });
+      const ownedBlooks = blookCatalog.filter((item) => ownedCounts.has(item.id));
+      if (ownedBlooks.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "arcade-description";
+        empty.textContent = "Your collection is waiting for its first discovery!";
+        collectionGrid.appendChild(empty);
+      } else {
+        ownedBlooks.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "collection-card";
+          const icon = document.createElement("span");
+          icon.className = "collection-card-icon";
+          icon.setAttribute("aria-hidden", "true");
+          icon.replaceChildren(createBlookArt(item));
+          const name = document.createElement("strong");
+          name.textContent = item.name;
+          const rarity = document.createElement("span");
+          rarity.className = `rarity-${item.rarity.toLowerCase()}`;
+          rarity.textContent = item.rarity;
+          const count = document.createElement("span");
+          count.textContent = `Owned ×${ownedCounts.get(item.id)}`;
+          card.append(icon, name, rarity, count);
+          collectionGrid.appendChild(card);
+        });
+      }
+    }
+
+    function getBlookValue(item) {
+      const valuesByRarity = {
+        Common: 10,
+        Uncommon: 25,
+        Rare: 60,
+        Epic: 150,
+        Legendary: 350,
+        Chroma: 600
+      };
+      return Number(valuesByRarity[item?.rarity] || 10);
+    }
+
+    function sellOwnedBlook(itemId) {
+      const username = document.getElementById("account-username").textContent;
+      const state = loadMarketState(username);
+      const item = blookCatalog.find((candidate) => candidate.id === itemId);
+      if (!item || !state.owned.includes(itemId)) {
+        return;
+      }
+      const sellIndex = state.owned.lastIndexOf(itemId);
+      if (sellIndex >= 0) {
+        state.owned.splice(sellIndex, 1);
+      }
+      if (state.equipped === itemId) {
+        state.equipped = null;
+      }
+      state.tickets += getBlookValue(item);
+      if (saveMarketState(state, username)) {
+        renderMarket();
+        renderBlookSection();
+        renderProfile();
+      }
+    }
+
+    function renderBlookSection() {
+      if (!blookPackGroups || !blookIndex) {
+        return;
+      }
+      const username = document.getElementById("account-username").textContent;
+      const state = loadMarketState(username);
+      const ownedCounts = new Map();
+      state.owned.forEach((itemId) => {
+        ownedCounts.set(itemId, (ownedCounts.get(itemId) || 0) + 1);
+      });
+
+      blookPackGroups.replaceChildren();
+      const ownedBlooks = blookCatalog.filter((item) => ownedCounts.has(item.id));
+      if (!ownedBlooks.length) {
+        const empty = document.createElement("p");
+        empty.className = "arcade-description";
+        empty.textContent = "You have not collected any blooks yet. Open a pack to start your collection.";
+        blookPackGroups.appendChild(empty);
+      } else {
+        packCatalog.forEach((pack) => {
+          const packBlooks = blookCatalog.filter((item) => item.packId === pack.id && ownedCounts.has(item.id));
+          if (!packBlooks.length) {
+            return;
+          }
+          const group = document.createElement("div");
+          group.className = "blook-pack-group";
+          const header = document.createElement("div");
+          header.className = "blook-pack-header";
+          header.textContent = `${pack.icon} ${pack.name}`;
+          const packCount = document.createElement("span");
+          packCount.textContent = `${packBlooks.reduce((sum, item) => sum + ownedCounts.get(item.id), 0)} total`;
+          header.appendChild(packCount);
+          const list = document.createElement("div");
+          list.className = "blook-pack-items";
+          packBlooks.forEach((item) => {
+            const row = document.createElement("div");
+            row.className = "blook-row-item";
+            const art = document.createElement("span");
+            art.className = "blook-row-art";
+            art.setAttribute("aria-hidden", "true");
+            art.replaceChildren(createBlookArt(item));
+            const info = document.createElement("div");
+            info.className = "blook-row-info";
+            const name = document.createElement("div");
+            name.className = "blook-row-name";
+            name.textContent = item.name;
+            const meta = document.createElement("span");
+            meta.className = "blook-row-meta";
+            meta.textContent = `${item.rarity} • Value ${getBlookValue(item)} tickets`;
+            info.append(name, meta);
+            const count = document.createElement("span");
+            count.className = "blook-row-count";
+            count.textContent = `Owned ×${ownedCounts.get(item.id)}`;
+            const value = document.createElement("span");
+            value.className = "blook-row-value";
+            value.textContent = `${getBlookValue(item)} tx`;
+            const actions = document.createElement("div");
+            actions.className = "blook-index-actions";
+            const equip = document.createElement("button");
+            equip.type = "button";
+            equip.className = "blook-sell-button";
+            equip.textContent = state.equipped === item.id ? "Equipped" : "Equip";
+            equip.disabled = state.equipped === item.id;
+            equip.addEventListener("click", () => {
+              state.equipped = item.id;
+              saveMarketState(state, username);
+              renderProfile();
+              renderBlookSection();
+            });
+            const sell = document.createElement("button");
+            sell.type = "button";
+            sell.className = "blook-sell-button";
+            sell.textContent = "Sell 1";
+            sell.addEventListener("click", () => sellOwnedBlook(item.id));
+            actions.append(equip, sell);
+            row.append(art, info, count, value, actions);
+            list.appendChild(row);
+          });
+          group.append(header, list);
+          blookPackGroups.appendChild(group);
+        });
+      }
+
+      blookIndex.replaceChildren();
+      blookCatalog.forEach((item) => {
+        const count = ownedCounts.get(item.id) || 0;
+        const card = document.createElement("div");
+        card.className = "blook-index-card";
+        const art = document.createElement("div");
+        art.className = "blook-index-art";
+        art.setAttribute("aria-hidden", "true");
+        art.replaceChildren(createBlookArt(item));
+        const name = document.createElement("div");
+        name.className = "blook-index-name";
+        name.textContent = item.name;
+        const meta = document.createElement("div");
+        meta.className = "blook-index-meta";
+        meta.textContent = `${item.rarity} • ${packCatalog.find((pack) => pack.id === item.packId)?.name || "Pack"}`;
+        const valueLine = document.createElement("div");
+        valueLine.className = "blook-index-meta";
+        valueLine.textContent = `Value: ${getBlookValue(item)} tickets`;
+        const actions = document.createElement("div");
+        actions.className = "blook-index-actions";
+        const countLabel = document.createElement("span");
+        countLabel.className = "blook-row-count";
+        countLabel.textContent = count ? `Owned ×${count}` : "Not owned";
+        actions.appendChild(countLabel);
+        if (count > 0) {
+          const equip = document.createElement("button");
+          equip.type = "button";
+          equip.className = "blook-sell-button";
+          equip.textContent = state.equipped === item.id ? "Equipped" : "Equip";
+          equip.disabled = state.equipped === item.id;
+          equip.addEventListener("click", () => {
+            state.equipped = item.id;
+            saveMarketState(state, username);
+            renderProfile();
+            renderBlookSection();
+          });
+          actions.appendChild(equip);
+          const sell = document.createElement("button");
+          sell.type = "button";
+          sell.className = "blook-sell-button";
+          sell.textContent = `Sell 1 (+${getBlookValue(item)})`;
+          sell.addEventListener("click", () => sellOwnedBlook(item.id));
+          actions.appendChild(sell);
+        }
+        card.append(art, name, meta, valueLine, actions);
+        blookIndex.appendChild(card);
+      });
+    }
+
+    function chooseBlook(pack) {
+      const rarityRoll = Math.random() * 100;
+      let totalOdds = 0;
+      let selectedRarity = "Common";
+      for (const rarity of rarityOrder) {
+        totalOdds += pack.odds[rarity] || 0;
+        if (rarityRoll < totalOdds) {
+          selectedRarity = rarity;
+          break;
+        }
+      }
+      const available = blookCatalog.filter((blook) => blook.rarity === selectedRarity && blook.id !== "day-one");
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
+    function waitForPackAnimation(milliseconds) {
+      const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? 50
+        : milliseconds;
+      return new Promise((resolve) => window.setTimeout(resolve, duration));
+    }
+
+    function createBlookArt(item, fallbackText = "") {
+      const art = document.createElement(item && item.imageUrl ? "img" : "span");
+      if (item && item.imageUrl) {
+        art.src = item.imageUrl;
+        art.alt = item.name || fallbackText || "Blook";
+        art.title = item.name || fallbackText || "Blook";
+        art.style.objectFit = "cover";
+        art.style.borderRadius = "inherit";
+        art.style.display = "block";
+        return art;
+      }
+      art.textContent = item && item.icon ? item.icon : fallbackText;
+      return art;
+    }
+
+    function showPackOpening(pack) {
+      packReveal.removeAttribute("data-rarity");
+      packReveal.classList.add("is-opening");
+      packRevealIcon.className = "pack-reveal-blook is-pack-opening";
+      packRevealIcon.replaceChildren(createBlookArt(pack));
+      packRevealName.textContent = `Opening ${pack.name}...`;
+      packRevealRarity.className = "pack-reveal-rarity";
+      packRevealRarity.textContent = "A surprise is on its way!";
+      packRevealSummary.hidden = true;
+      packRevealSummary.textContent = "";
+      packReveal.hidden = false;
+    }
+
+    function showPackReward(reward, title, summary) {
+      packReveal.classList.remove("is-opening");
+      packReveal.dataset.rarity = reward.rarity;
+      packRevealIcon.className = "pack-reveal-blook";
+      packRevealIcon.replaceChildren(createBlookArt(reward));
+      packRevealName.textContent = title;
+      packRevealRarity.className = `pack-reveal-rarity rarity-${reward.rarity.toLowerCase()}`;
+      packRevealRarity.textContent = reward.rarity;
+      packRevealSummary.textContent = summary;
+      packRevealSummary.hidden = !summary;
+      void packRevealIcon.offsetWidth;
+    }
+
+    function rewardAnimationDuration(rarity) {
+      return {
+        Common: 650,
+        Uncommon: 850,
+        Rare: 950,
+        Epic: 1100,
+        Legendary: 1350,
+        Chroma: 1800
+      }[rarity] || 650;
+    }
+
+    async function animatePackReward(pack, reward, summary = "") {
+      showPackOpening(pack);
+      await waitForPackAnimation(800);
+      showPackReward(reward, reward.name, summary);
+      await waitForPackAnimation(rewardAnimationDuration(reward.rarity));
+    }
+
+    function finishPackOpening() {
+      packOpening = false;
+      autoOpening = false;
+      autoOpenPackId = null;
+      autoOpenStopRequested = false;
+      renderMarket();
+    }
+
+    function openPackOnce(pack) {
+      const state = loadMarketState();
+      if (state.tickets < pack.price) {
+        marketFeedback.textContent = "You need more tickets to open that pack.";
+        return null;
+      }
+      const reward = chooseBlook(pack);
+      state.tickets -= pack.price;
+      state.owned.push(reward.id);
+      if (!saveMarketState(state)) {
+        return null;
+      }
+      return reward;
+    }
+
+    async function openPack(pack) {
+      if (packOpening) {
+        return;
+      }
+      packOpening = true;
+      renderMarket();
+      marketFeedback.textContent = "";
+      const reward = openPackOnce(pack);
+      if (!reward) {
+        finishPackOpening();
+        return;
+      }
+      marketWallet.textContent = `Tickets: ${loadMarketState().tickets}`;
+      await animatePackReward(pack, reward);
+      finishPackOpening();
+    }
+
+    async function startAutoOpen(pack, requestedCount) {
+      if (packOpening) {
+        return;
+      }
+      if (!Number.isInteger(requestedCount) || requestedCount < 1) {
+        marketFeedback.textContent = "Enter a whole number of packs to auto-open.";
+        return;
+      }
+      const affordableCount = Math.floor(loadMarketState().tickets / pack.price);
+      if (requestedCount > affordableCount) {
+        marketFeedback.textContent = `You can afford up to ${affordableCount} ${pack.name.toLowerCase()}${affordableCount === 1 ? "" : "s"}.`;
+        return;
+      }
+
+      packOpening = true;
+      autoOpening = true;
+      autoOpenPackId = pack.id;
+      autoOpenStopRequested = false;
+      marketFeedback.textContent = "";
+      renderMarket();
+
+      let openedCount = 0;
+      let failureMessage = "";
+      for (let index = 0; index < requestedCount && !autoOpenStopRequested; index += 1) {
+        const reward = openPackOnce(pack);
+        if (!reward) {
+          failureMessage = marketFeedback.textContent;
+          break;
+        }
+        openedCount += 1;
+        marketWallet.textContent = `Tickets: ${loadMarketState().tickets}`;
+        await animatePackReward(pack, reward, `Auto-opened ${openedCount} of ${requestedCount}.`);
+      }
+
+      const stopped = autoOpenStopRequested;
+      finishPackOpening();
+      marketFeedback.textContent = failureMessage || (stopped
+        ? `Auto Open stopped after ${openedCount} pack${openedCount === 1 ? "" : "s"}.`
+        : `Auto Open finished: ${openedCount} pack${openedCount === 1 ? "" : "s"} opened.`);
+    }
+
+    async function openMaxPacks(pack) {
+      if (packOpening) {
+        return;
+      }
+      const state = loadMarketState();
+      const count = Math.floor(state.tickets / pack.price);
+      if (count < 1) {
+        marketFeedback.textContent = "You do not have enough tickets to open this pack.";
+        return;
+      }
+
+      packOpening = true;
+      marketFeedback.textContent = "";
+      const rewards = [];
+      const rarityCounts = new Map();
+      for (let index = 0; index < count; index += 1) {
+        const reward = chooseBlook(pack);
+        rewards.push(reward);
+        rarityCounts.set(reward.rarity, (rarityCounts.get(reward.rarity) || 0) + 1);
+        state.owned.push(reward.id);
+      }
+      state.tickets -= count * pack.price;
+      if (!saveMarketState(state)) {
+        finishPackOpening();
+        return;
+      }
+
+      renderMarket();
+      marketWallet.textContent = `Tickets: ${state.tickets}`;
+      const rarestReward = rewards.reduce((rarest, reward) =>
+        rarityOrder.indexOf(reward.rarity) > rarityOrder.indexOf(rarest.rarity) ? reward : rarest
+      );
+      const summary = rarityOrder
+        .filter((rarity) => rarityCounts.has(rarity))
+        .map((rarity) => `${rarity} ×${rarityCounts.get(rarity)}`)
+        .join(" · ");
+
+      showPackOpening(pack);
+      await waitForPackAnimation(800);
+      showPackReward(
+        rarestReward,
+        `${count} ${pack.name.replace(/Pack$/, "Packs")} opened!`,
+        summary
+      );
+      await waitForPackAnimation(rewardAnimationDuration(rarestReward.rarity));
+      finishPackOpening();
+    }
+
+    const profileAvatar = document.getElementById("profile-avatar");
+    const profileAvatarName = document.getElementById("profile-avatar-name");
+    const profileAvatarRarity = document.getElementById("profile-avatar-rarity");
+    const profileUsername = document.getElementById("profile-username");
+    const profileCollectionNote = document.getElementById("profile-collection-note");
+    const profileChoices = document.getElementById("profile-choices");
+    const profileFeedback = document.getElementById("profile-feedback");
+
+    function renderProfile() {
+      const username = document.getElementById("account-username").textContent;
+      const state = loadMarketState(username);
+      const equipped = blookCatalog.find((item) => item.id === state.equipped);
+      if (profileUsername) {
+        profileUsername.textContent = username;
+        profileUsername.classList.toggle("testboy-account-name", username.toLowerCase() === "testboy");
+      }
+      if (profileAvatar) {
+        profileAvatar.replaceChildren();
+        if (equipped) {
+          profileAvatar.replaceChildren(createBlookArt(equipped));
+        } else {
+          const starterImage = document.createElement("img");
+          starterImage.src = starterBlookImageUrl;
+          starterImage.alt = "";
+          profileAvatar.appendChild(starterImage);
+        }
+      }
+      if (profileAvatarName) {
+        profileAvatarName.textContent = equipped ? equipped.name : "No blook equipped";
+      }
+      if (profileAvatarRarity) {
+        profileAvatarRarity.textContent = equipped ? equipped.rarity : "Default avatar";
+        profileAvatarRarity.className = equipped
+          ? `profile-avatar-rarity rarity-${equipped.rarity.toLowerCase()}`
+          : "profile-avatar-rarity";
+      }
+
+      const badges = getBadgeList(username);
+      const badgeContainer = document.getElementById("profile-badges");
+      if (badgeContainer) {
+        badgeContainer.replaceChildren();
+        if (badges.length > 0) {
+          badges.forEach((badge) => {
+            const badgeEl = document.createElement("span");
+            badgeEl.className = `profile-badge ${badge.toLowerCase().replace(/\s+/g, "-")}`;
+            badgeEl.textContent = badge;
+            badgeContainer.appendChild(badgeEl);
+          });
+        }
+      }
+
+      const isOwner = isOwnerAccount(username);
+      const adminPanel = document.getElementById("admin-panel");
+      if (adminPanel) {
+        adminPanel.hidden = !isOwner;
+      }
+      if (isOwner) {
+        document.getElementById("admin-target-username").value = "Orange";
+        void loadScreenshotAccessRequests();
+      }
+
+      if (profileChoices) {
+        profileChoices.replaceChildren();
+      }
+
+      const ownedCounts = new Map();
+      state.owned.forEach((itemId) => {
+        ownedCounts.set(itemId, (ownedCounts.get(itemId) || 0) + 1);
+      });
+      const ownedBlooks = blookCatalog.filter((item) => ownedCounts.has(item.id));
+      if (profileCollectionNote) {
+        profileCollectionNote.textContent = ownedBlooks.length
+          ? "Tap a blook to equip it. Your duplicate copies count toward your collection, too."
+          : "You do not own any blooks yet. Open a pack in the Market to find one.";
+      }
+
+      if (!profileChoices) {
+        return;
+      }
+
+      const options = [null, ...ownedBlooks];
+      options.forEach((item) => {
+        const button = document.createElement("button");
+        button.className = "profile-choice";
+        button.type = "button";
+        const itemId = item ? item.id : null;
+        const isEquipped = state.equipped === itemId;
+        button.setAttribute("aria-pressed", String(isEquipped));
+        button.setAttribute(
+          "aria-label",
+          item
+            ? `${isEquipped ? "Equipped" : "Equip"} ${item.name} ${item.rarity} blook`
+            : `${isEquipped ? "Equipped" : "Use"} default avatar`
+        );
+        const icon = document.createElement("span");
+        icon.className = "profile-choice-icon";
+        icon.setAttribute("aria-hidden", "true");
+        if (item) {
+          icon.replaceChildren(createBlookArt(item));
+        } else {
+          const starterImage = document.createElement("img");
+          starterImage.src = starterBlookImageUrl;
+          starterImage.alt = "";
+          icon.appendChild(starterImage);
+        }
+        const name = document.createElement("span");
+        name.className = "profile-choice-name";
+        name.textContent = item ? item.name : "Default";
+        const rarity = document.createElement("span");
+        rarity.className = `profile-choice-rarity${item ? ` rarity-${item.rarity.toLowerCase()}` : ""}`;
+        rarity.textContent = item ? item.rarity : "No blook";
+        button.append(icon, name, rarity);
+        button.addEventListener("click", () => {
+          const currentState = loadMarketState(username);
+          if (itemId && !currentState.owned.includes(itemId)) {
+            if (profileFeedback) {
+              profileFeedback.textContent = "You need to own that blook before equipping it.";
+            }
+            renderProfile();
+            return;
+          }
+          currentState.equipped = itemId;
+          if (saveMarketState(currentState, username)) {
+            if (profileFeedback) {
+              profileFeedback.textContent = item
+                ? `${item.name} equipped as your profile picture.`
+                : "Default avatar equipped.";
+            }
+            renderProfile();
+          }
+        });
+        profileChoices.appendChild(button);
+      });
+    }
+
+    function addTickets(amount) {
+      if (amount <= 0) {
+        return;
+      }
+      const state = loadMarketState();
+      state.tickets += amount;
+      if (saveMarketState(state)) {
+        renderMarket();
+      }
+    }
+
+    const adminAction = document.getElementById("admin-action");
+    const adminBlookId = document.getElementById("admin-blook-id");
+    const adminTicketAmount = document.getElementById("admin-ticket-amount");
+    const adminBadgeName = document.getElementById("admin-badge-name");
+    const adminDuration = document.getElementById("admin-duration");
+    const adminDurationUnit = document.getElementById("admin-duration-unit");
+    const adminTargetUsername = document.getElementById("admin-target-username");
+    const adminFeedback = document.getElementById("admin-feedback");
+
+    async function loadScreenshotAccessRequests() {
+      if (!isOwnerAccount(currentAccountUsername)) {
+        return;
+      }
+      if (!supabaseConfigured || !supabase) {
+        screenshotAdminRequestsList.textContent = "Screenshot requests require the Bevelit Supabase project.";
+        return;
+      }
+
+      screenshotAdminRequestsList.textContent = "Loading requests...";
+      screenshotAdminRequestFeedback.textContent = "";
+      const { data: requests, error: requestError } = await supabase
+        .from("screenshot_sharing_requests")
+        .select("id, user_id, request_message, created_at")
+        .eq("status", "pending")
+        .order("created_at", { ascending: true })
+        .limit(50);
+
+      if (requestError) {
+        console.error("Could not load screenshot access requests.", requestError);
+        screenshotAdminRequestsList.textContent = "Could not load requests. Check that the screenshot request migration is deployed.";
+        return;
+      }
+      if (!requests.length) {
+        screenshotAdminRequestsList.textContent = "There are no pending screenshot access requests.";
+        return;
+      }
+
+      const userIds = [...new Set(requests.map((request) => request.user_id))];
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, username")
+        .in("id", userIds);
+      if (profileError) {
+        console.error("Could not load screenshot request usernames.", profileError);
+        screenshotAdminRequestsList.textContent = "Could not load requester accounts. Confirm admin profile access is configured.";
+        return;
+      }
+
+      const usernameById = new Map(profiles.map((profile) => [profile.id, profile.username]));
+      screenshotAdminRequestsList.replaceChildren();
+      requests.forEach((request) => {
+        const item = document.createElement("article");
+        item.className = "screenshot-request-item";
+        const heading = document.createElement("strong");
+        heading.textContent = usernameById.get(request.user_id) || "Unknown account";
+        const date = document.createElement("p");
+        date.textContent = `Requested ${new Date(request.created_at).toLocaleString()}`;
+        const note = document.createElement("p");
+        note.textContent = request.request_message || "No note provided.";
+        const controls = document.createElement("div");
+        controls.className = "admin-controls";
+
+        [["Approve", true], ["Deny", false]].forEach(([label, approved]) => {
+          const button = document.createElement("button");
+          button.className = "account-button";
+          button.type = "button";
+          button.textContent = label;
+          button.addEventListener("click", () => {
+            button.disabled = true;
+            void reviewScreenshotAccessRequest(request, approved, controls);
+          });
+          controls.appendChild(button);
+        });
+
+        item.append(heading, date, note, controls);
+        screenshotAdminRequestsList.appendChild(item);
+      });
+    }
+
+    async function reviewScreenshotAccessRequest(request, approved, controls) {
+      if (!isOwnerAccount(currentAccountUsername)) {
+        screenshotAdminRequestFeedback.textContent = "Only an admin can review screenshot requests.";
+        return;
+      }
+
+      controls.querySelectorAll("button").forEach((button) => {
+        button.disabled = true;
+      });
+      const { error } = await supabase.rpc("review_screenshot_sharing_request", {
+        p_request_id: request.id,
+        p_approve: approved
+      });
+      if (error) {
+        console.error("Could not review screenshot access request.", error);
+        screenshotAdminRequestFeedback.textContent = "Could not review this request. Confirm the request migration is deployed and try refreshing.";
+        controls.querySelectorAll("button").forEach((button) => {
+          button.disabled = false;
+        });
+        return;
+      }
+
+      screenshotAdminRequestFeedback.textContent = approved
+        ? "Request approved. Screenshot sharing is now enabled for that account."
+        : "Request denied.";
+      if (request.user_id === currentAccountUserId && approved) {
+        currentCanShareScreenshots = true;
+        chatScreenshotNote.textContent = "You have permission to share screenshots. PNG, JPEG, or WebP up to 5 MB.";
+        updateScreenshotRequestBox(null);
+      } else if (request.user_id === currentAccountUserId) {
+        updateScreenshotRequestBox({ status: "denied" });
+      }
+      await loadScreenshotAccessRequests();
+      if (request.user_id === currentAccountUserId) {
+        await loadScreenshotRequestStatus();
+      }
+    }
+
+    document.getElementById("refresh-screenshot-requests").addEventListener("click", () => {
+      void loadScreenshotAccessRequests();
+    });
+
+    function populateAdminBlooks() {
+      adminBlookId.replaceChildren();
+      blookCatalog.forEach((blook) => {
+        const option = document.createElement("option");
+        option.value = blook.id;
+        option.textContent = `${blook.name} (${blook.rarity})`;
+        adminBlookId.appendChild(option);
+      });
+    }
+
+    function updateAdminFields() {
+      const action = adminAction.value;
+      const showBlook = ["give-blook", "take-blook", "day-one"].includes(action);
+      const showTickets = ["give-tickets", "take-tickets"].includes(action);
+      const showBadge = ["give-badge", "take-badge"].includes(action);
+      const showDuration = ["mute", "ban"].includes(action);
+      document.getElementById("admin-blook-row").hidden = !showBlook;
+      document.getElementById("admin-ticket-row").hidden = !showTickets;
+      document.getElementById("admin-badge-row").hidden = !showBadge;
+      document.getElementById("admin-duration-row").hidden = !showDuration;
+      document.getElementById("admin-unit-row").hidden = !showDuration;
+      if (showDuration) {
+        adminDuration.value = adminDuration.value || "15";
+      }
+    }
+
+    adminAction.addEventListener("change", updateAdminFields);
+    populateAdminBlooks();
+    updateAdminFields();
+
+    document.getElementById("admin-run-action").addEventListener("click", async () => {
+      const currentUser = document.getElementById("account-username").textContent;
+      if (!isOwnerAccount(currentUser)) {
+        adminFeedback.textContent = "Only an admin can use admin tools.";
+        return;
+      }
+
+      const targetUsername = normalizeUsername(adminTargetUsername.value || "");
+      if (!targetUsername) {
+        adminFeedback.textContent = "Choose a username to manage.";
+        return;
+      }
+
+      const action = adminAction.value;
+      if (supabaseConfigured && ["give-blook", "take-blook", "give-tickets", "take-tickets", "day-one"].includes(action)) {
+        const amount = ["give-tickets", "take-tickets"].includes(action)
+          ? Number(adminTicketAmount.value || 0)
+          : null;
+        if (amount !== null && (!Number.isSafeInteger(amount) || amount < 1)) {
+          adminFeedback.textContent = "Enter a positive ticket amount.";
+          return;
+        }
+
+        const { data: updatedState, error: updateError } = await supabase.rpc("admin_adjust_market_state", {
+          p_username: targetUsername,
+          p_action: action === "day-one" ? "give-blook" : action,
+          p_blook_id: action === "day-one" ? "day-one"
+            : ["give-blook", "take-blook"].includes(action) ? adminBlookId.value : null,
+          p_ticket_amount: amount
+        });
+        if (!updateError && updatedState) {
+          const item = blookCatalog.find((blook) => blook.id === adminBlookId.value);
+          const updatedUsername = updatedState.username;
+          adminFeedback.textContent = action === "day-one"
+            ? `${updatedUsername} received the Day One blook.`
+            : action === "give-blook"
+              ? `${updatedUsername} received ${item.name}.`
+              : action === "take-blook"
+                ? `${updatedUsername} lost ${item.name}.`
+                : action === "give-tickets"
+                  ? `${updatedUsername} received ${amount} tickets.`
+                  : `${updatedUsername} lost ${amount} tickets.`;
+          if (updatedUsername.toLowerCase() === currentAccountUsername.toLowerCase()) {
+            try {
+              localStorage.setItem(marketStorageKey(updatedUsername), JSON.stringify(normalizeMarketState(updatedState)));
+              renderProfile();
+              renderMarket();
+            } catch (storageError) {
+              console.error("Could not cache the updated market state.", storageError);
+              adminFeedback.textContent += " Reload to see the updated items.";
+            }
+          }
+          return;
+        }
+
+        if (updateError || !updatedState) {
+          console.warn("Supabase market-state admin RPC failed; falling back to local market logic.", updateError);
+        }
+      }
+
+      if (action === "grant-screenshot-sharing" || action === "revoke-screenshot-sharing") {
+        if (!supabaseConfigured || !supabase) {
+          adminFeedback.textContent = "Screenshot permissions require the Bevelit Supabase project.";
+          return;
+        }
+        const { data: targetProfile, error: lookupError } = await supabase
+          .from("profiles")
+          .select("id, username")
+          .ilike("username", targetUsername)
+          .maybeSingle();
+        if (lookupError) {
+          console.error("Could not find the screenshot-sharing account.", lookupError);
+          adminFeedback.textContent = "Could not look up that account. Check that the screenshot-sharing migration is deployed.";
+          return;
+        }
+        if (!targetProfile) {
+          adminFeedback.textContent = "That account was not found.";
+          return;
+        }
+        const canShare = action === "grant-screenshot-sharing";
+        const { data: updatedProfile, error: updateError } = await supabase
+          .from("profiles")
+          .update({ can_share_screenshots: canShare })
+          .eq("id", targetProfile.id)
+          .select("id")
+          .maybeSingle();
+        if (!updateError && updatedProfile) {
+          if (canShare) {
+            const { data: pendingRequest, error: requestLookupError } = await supabase
+              .from("screenshot_sharing_requests")
+              .select("id")
+              .eq("user_id", targetProfile.id)
+              .eq("status", "pending")
+              .maybeSingle();
+            if (requestLookupError) {
+              console.error("Could not check for a pending screenshot request.", requestLookupError);
+              adminFeedback.textContent = `${targetProfile.username} can share screenshots, but a pending request could not be updated. Check that the request migration is deployed.`;
+              return;
+            }
+            if (pendingRequest) {
+              const { error: reviewError } = await supabase.rpc("review_screenshot_sharing_request", {
+                p_request_id: pendingRequest.id,
+                p_approve: true
+              });
+              if (reviewError) {
+                console.error("Could not mark the screenshot request approved.", reviewError);
+                adminFeedback.textContent = `${targetProfile.username} can share screenshots, but the pending request could not be marked approved.`;
+                return;
+              }
+            }
+          }
+          if (targetProfile.username.toLowerCase() === currentAccountUsername.toLowerCase()) {
+            currentCanShareScreenshots = canShare;
+            chatScreenshotNote.textContent = canShare
+              ? "You have permission to share screenshots. PNG, JPEG, or WebP up to 5 MB."
+              : "Ask an admin to enable screenshot sharing. PNG, JPEG, or WebP up to 5 MB.";
+            updateScreenshotRequestBox(null);
+            if (!canShare) {
+              void loadScreenshotRequestStatus();
+            }
+          }
+          adminFeedback.textContent = canShare
+            ? `${targetProfile.username} can now share screenshots in chat.`
+            : `${targetProfile.username} can no longer share screenshots in chat.`;
+          void loadScreenshotAccessRequests();
+          return;
+        }
+
+        if (updateError || !updatedProfile) {
+          console.warn("Supabase screenshot-sharing permission update failed; falling back to local profile state.", updateError);
+        }
+        const localProfile = getPlayerProfile(targetUsername);
+        localProfile.can_share_screenshots = canShare;
+        const profiles = getPlayerProfiles();
+        profiles[targetUsername.toLowerCase()] = localProfile;
+        savePlayerProfiles(profiles);
+        if (targetUsername.toLowerCase() === currentAccountUsername.toLowerCase()) {
+          currentCanShareScreenshots = canShare;
+          chatScreenshotNote.textContent = canShare
+            ? "You have permission to share screenshots. PNG, JPEG, or WebP up to 5 MB."
+            : "Ask an admin to enable screenshot sharing. PNG, JPEG, or WebP up to 5 MB.";
+          updateScreenshotRequestBox(null);
+          if (!canShare) {
+            void loadScreenshotRequestStatus();
+          }
+        }
+        adminFeedback.textContent = canShare
+          ? `${targetUsername} can now share screenshots in chat.`
+          : `${targetUsername} can no longer share screenshots in chat.`;
+        return;
+      }
+      const state = loadMarketState(targetUsername);
+      let message = "";
+
+      if (action === "give-blook" || action === "take-blook") {
+        const blookId = adminBlookId.value;
+        if (action === "give-blook") {
+          state.owned = [...new Set([...state.owned, blookId])];
+          message = `${targetUsername} received ${blookId}.`;
+        } else {
+          state.owned = state.owned.filter((entry) => entry !== blookId);
+          if (state.equipped === blookId) {
+            state.equipped = null;
+          }
+          message = `${targetUsername} lost ${blookId}.`;
+        }
+        if (!saveMarketState(state, targetUsername)) {
+          adminFeedback.textContent = "Could not save the target user's market items.";
+          return;
+        }
+      } else if (action === "give-tickets" || action === "take-tickets") {
+        const change = Number(adminTicketAmount.value || 0);
+        const amount = Number.isFinite(change) && change > 0 ? change : 0;
+        if (!amount) {
+          adminFeedback.textContent = "Enter a positive ticket amount.";
+          return;
+        }
+        state.tickets = Math.max(0, Math.trunc(state.tickets || 0) + (action === "give-tickets" ? amount : -amount));
+        if (!saveMarketState(state, targetUsername)) {
+          adminFeedback.textContent = "Could not save the target user's market items.";
+          return;
+        }
+        message = action === "give-tickets"
+          ? `${targetUsername} received ${amount} tickets.`
+          : `${targetUsername} lost ${amount} tickets.`;
+      } else if (action === "give-badge" || action === "take-badge") {
+        const badgeName = normalizeUsername(adminBadgeName.value || "");
+        if (!badgeName) {
+          adminFeedback.textContent = "Enter a badge name.";
+          return;
+        }
+        const profile = getPlayerProfile(targetUsername);
+        const existing = Array.isArray(profile.badges) ? profile.badges : [];
+        if (action === "give-badge") {
+          profile.badges = [...new Set([...existing, badgeName])];
+          message = `${targetUsername} was awarded the ${badgeName} badge.`;
+        } else {
+          profile.badges = existing.filter((badge) => badge !== badgeName);
+          message = `${targetUsername} lost the ${badgeName} badge.`;
+        }
+        const profiles = getPlayerProfiles();
+        profiles[targetUsername.toLowerCase()] = profile;
+        savePlayerProfiles(profiles);
+      } else if (action === "mute" || action === "ban") {
+        const durationValue = Number(adminDuration.value || 0);
+        const unit = adminDurationUnit.value;
+        const durationMs = durationValue > 0 ? durationValue * {
+          minutes: 60 * 1000,
+          hours: 60 * 60 * 1000,
+          days: 24 * 60 * 60 * 1000
+        }[unit] : 0;
+        if (!durationMs) {
+          adminFeedback.textContent = "Enter a duration greater than zero.";
+          return;
+        }
+        setUserRestriction(targetUsername, action === "mute" ? "mute" : "ban", durationMs);
+        message = action === "mute"
+          ? `${targetUsername} was muted for ${durationValue} ${unit}.`
+          : `${targetUsername} was banned for ${durationValue} ${unit}.`;
+      } else if (action === "day-one") {
+        ensureDayOneBlook(targetUsername);
+        message = `${targetUsername} received the Day One blook.`;
+      }
+
+      adminFeedback.textContent = message || "Action applied.";
+      if (targetUsername === currentUser) {
+        renderProfile();
+      }
+    });
+
+    if (!accountScreen.hidden) {
+      renderMarket();
+    }
+
+    const quizQuestions = [
+      { question: "Which planet is known as the Red Planet?", answers: ["Mars", "Venus", "Jupiter"], correct: "Mars" },
+      { question: "How many sides does a hexagon have?", answers: ["Five", "Six", "Eight"], correct: "Six" },
+      { question: "What do bees make?", answers: ["Milk", "Honey", "Bread"], correct: "Honey" },
+      { question: "Which ocean is the largest?", answers: ["Atlantic", "Indian", "Pacific"], correct: "Pacific" },
+      { question: "What is 9 × 7?", answers: ["56", "63", "72"], correct: "63" },
+      { question: "What is the first blook that ever got added to the game with blook art?", answers: ["Orange", "Day One", "Snake Escape"], correct: "Day One" },
+      { question: "What is the capital of France?", answers: ["France", "OH MAH GAWD ITS VERITY", "Paris"], correct: "Paris" },
+      { question: "When was this game made?", answers: ["11/10/2026", "10/13/2025", "3/12/2026"], correct: "11/10/2026" }
+    ];
+    const quizStart = document.getElementById("quiz-start");
+    const quizPlay = document.getElementById("quiz-play");
+    const quizPrompt = document.getElementById("quiz-prompt");
+    const quizAnswers = document.getElementById("quiz-answers");
+    const quizFeedback = document.getElementById("quiz-feedback");
+    const quizNext = document.getElementById("quiz-next");
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizFinished = false;
+
+    function renderQuizQuestion() {
+      const currentQuestion = quizQuestions[quizIndex];
+      quizPrompt.textContent = `Question ${quizIndex + 1} of ${quizQuestions.length}: ${currentQuestion.question}`;
+      quizFeedback.textContent = "";
+      quizNext.hidden = true;
+      quizNext.textContent = quizIndex === quizQuestions.length - 1 ? "Finish" : "Next";
+      quizAnswers.replaceChildren();
+
+      currentQuestion.answers.forEach((answer) => {
+        const answerButton = document.createElement("button");
+        answerButton.className = "quiz-answer";
+        answerButton.type = "button";
+        answerButton.textContent = answer;
+        answerButton.addEventListener("click", () => {
+          quizAnswers.querySelectorAll("button").forEach((button) => {
+            button.disabled = true;
+          });
+          if (answer === currentQuestion.correct) {
+            quizScore += 1;
+            quizFeedback.textContent = "Correct!";
+          } else {
+            quizFeedback.textContent = `Not quite! The answer is ${currentQuestion.correct}.`;
+          }
+          quizNext.hidden = false;
+        });
+        quizAnswers.appendChild(answerButton);
+      });
+    }
+
+    quizStart.addEventListener("click", () => {
+      quizIndex = 0;
+      quizScore = 0;
+      quizFinished = false;
+      quizStart.hidden = true;
+      quizPlay.hidden = false;
+      renderQuizQuestion();
+    });
+
+    quizNext.addEventListener("click", () => {
+      if (quizFinished) {
+        quizIndex = 0;
+        quizScore = 0;
+        quizFinished = false;
+        renderQuizQuestion();
+      } else if (quizIndex < quizQuestions.length - 1) {
+        quizIndex += 1;
+        renderQuizQuestion();
+      } else {
+        quizFinished = true;
+        addTickets(quizScore);
+        quizPrompt.textContent = `Quiz complete! You scored ${quizScore} out of ${quizQuestions.length} and earned ${quizScore} tickets.`;
+        quizAnswers.replaceChildren();
+        quizFeedback.textContent = "";
+        quizNext.textContent = "Play Again";
+      }
+    });
+
+    const popStart = document.getElementById("pop-start");
+    const popField = document.getElementById("pop-field");
+    const popTarget = document.getElementById("pop-target");
+    const popTargetImage = popTarget.querySelector("img");
+    const popScore = document.getElementById("pop-score");
+    const popFeedback = document.getElementById("pop-feedback");
+    let popPoints = 0;
+    let popTime = 15;
+    let popTimer;
+
+    function movePopTarget() {
+      const maxLeft = Math.max(0, popField.clientWidth - popTarget.offsetWidth);
+      const maxTop = Math.max(0, popField.clientHeight - popTarget.offsetHeight);
+      popTarget.style.left = `${Math.random() * maxLeft}px`;
+      popTarget.style.top = `${Math.random() * maxTop}px`;
+    }
+
+    function updatePopScore() {
+      popScore.textContent = `Score: ${popPoints} · Time: ${popTime}`;
+    }
+
+    function endPopGame() {
+      window.clearInterval(popTimer);
+      popTarget.hidden = true;
+      addTickets(popPoints);
+      popFeedback.textContent = `Time's up! You popped ${popPoints} blooks and earned ${popPoints} tickets.`;
+      popStart.hidden = false;
+      popStart.textContent = "Play Again";
+    }
+
+    popStart.addEventListener("click", () => {
+      popPoints = 0;
+      popTime = 15;
+      popFeedback.textContent = "";
+      popField.hidden = false;
+      popTarget.hidden = false;
+      popStart.hidden = true;
+      updatePopScore();
+      movePopTarget();
+      window.clearInterval(popTimer);
+      popTimer = window.setInterval(() => {
+        popTime -= 1;
+        updatePopScore();
+        if (popTime <= 0) {
+          endPopGame();
+        }
+      }, 1000);
+    });
+
+    popTarget.addEventListener("click", () => {
+      popTarget.classList.add("is-popping");
+      popPoints += 1;
+      updatePopScore();
+    });
+
+    popTargetImage.addEventListener("animationend", (event) => {
+      if (event.animationName !== "click-pop") {
+        return;
+      }
+      popTarget.classList.remove("is-popping");
+      movePopTarget();
+    });
+
+    function getOnlineUsers() {
+      try {
+        const value = JSON.parse(localStorage.getItem(onlineUsersStorageKey) || "[]");
+        return Array.isArray(value) ? value.filter((entry) => typeof entry === "string") : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveOnlineUsers(users) {
+      localStorage.setItem(onlineUsersStorageKey, JSON.stringify([...new Set(users.filter(Boolean))]));
+    }
+
+    function setUserOnline(username, isOnline) {
+      const cleanedName = normalizeUsername(username);
+      if (!cleanedName) {
+        return;
+      }
+      const users = getOnlineUsers();
+      const nextUsers = users.filter((entry) => entry.toLowerCase() !== cleanedName.toLowerCase());
+      if (isOnline) {
+        nextUsers.push(cleanedName);
+      }
+      saveOnlineUsers(nextUsers);
+    }
+
+    function renderChatOnlineCount() {
+      const onlineUsernames = new Set();
+      const presenceState = chatRealtimeChannel ? chatRealtimeChannel.presenceState() : {};
+      Object.values(presenceState).forEach((presences) => {
+        presences.forEach((presence) => {
+          if (typeof presence.username === "string" && presence.username.trim()) {
+            onlineUsernames.add(presence.username.toLowerCase());
+          }
+        });
+      });
+      const count = onlineUsernames.size;
+      chatOnlineCount.textContent = `${count} ${count === 1 ? "person" : "people"} online`;
+    }
+
+    async function trackChatPresence() {
+      if (!chatRealtimeChannel || !currentAccountUsername) {
+        return;
+      }
+      const status = await chatRealtimeChannel.track({ username: currentAccountUsername });
+      if (status !== "ok") {
+        console.error("Could not publish chat presence.", status);
+        chatError.textContent = "Your online status could not be shared with chat.";
+      }
+    }
+
+    function searchAccounts(query = "") {
+      const search = normalizeUsername(query).toLowerCase();
+      const allUsers = [...new Set([
+        ...getLocalUsers().map((user) => user.username),
+        ...Object.keys(getPlayerProfiles()),
+        ...Object.keys(getPlayerProfiles()).map((key) => getPlayerProfiles()[key]?.username || key)
+      ])].filter(Boolean);
+      const onlineUsers = new Set(getOnlineUsers().map((user) => user.toLowerCase()));
+      return allUsers
+        .filter((name) => !search || name.toLowerCase().includes(search))
+        .sort((a, b) => {
+          const aOnline = onlineUsers.has(a.toLowerCase()) ? 1 : 0;
+          const bOnline = onlineUsers.has(b.toLowerCase()) ? 1 : 0;
+          if (aOnline !== bOnline) {
+            return bOnline - aOnline;
+          }
+          return a.localeCompare(b);
+        })
+        .slice(0, 12);
+    }
+
+    function updateMentionSuggestions(query = chatAccountSearch.value) {
+      const search = normalizeUsername(query || "").trim();
+      const matches = searchAccounts(search || "");
+      chatMentionList.replaceChildren();
+      if (!matches.length) {
+        chatMentionList.hidden = true;
+        return;
+      }
+      matches.forEach((username) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chat-mention-pill";
+        button.textContent = `@${username}`;
+        const onlineTag = document.createElement("small");
+        onlineTag.textContent = getOnlineUsers().some((entry) => entry.toLowerCase() === username.toLowerCase()) ? "online" : "saved";
+        button.appendChild(onlineTag);
+        button.addEventListener("click", () => {
+          insertMention(username);
+          chatAccountSearch.value = "";
+          updateMentionSuggestions();
+        });
+        chatMentionList.appendChild(button);
+      });
+      chatMentionList.hidden = false;
+    }
+
+    function insertMention(username) {
+      const existing = chatInput.value;
+      const caret = chatInput.selectionStart ?? existing.length;
+      const before = existing.slice(0, caret);
+      const after = existing.slice(caret);
+      const matches = before.match(/(^|\s)@([A-Za-z0-9_]*)$/);
+      const replacement = `@${username} `;
+      let nextValue;
+      if (matches) {
+        const startIndex = matches.index + matches[1].length;
+        nextValue = before.slice(0, startIndex) + replacement + after;
+      } else {
+        nextValue = `${before}${before && !before.endsWith(" ") ? " " : ""}${replacement}${after}`;
+      }
+      chatInput.value = nextValue;
+      chatInput.focus();
+      const caretPos = nextValue.indexOf(replacement) + replacement.length;
+      chatInput.setSelectionRange(caretPos, caretPos);
+    }
+
+    function formatMentionedText(text) {
+      const parts = text.split(/(@[A-Za-z0-9_]+)/g);
+      return parts.map((part) => {
+        if (!part.startsWith("@")) {
+          return document.createTextNode(part);
+        }
+        const mention = document.createElement("span");
+        mention.className = "chat-message-mention";
+        mention.textContent = part;
+        return mention;
+      });
+    }
+
+    function renderChatMessages() {
+      chatLog.replaceChildren();
+      if (chatMessages.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.textContent = "No messages yet. Start the conversation!";
+        chatLog.appendChild(emptyMessage);
+        return;
+      }
+      chatMessages.forEach((message) => {
+        const row = document.createElement("div");
+        row.className = "chat-message";
+        const avatar = document.createElement("span");
+        avatar.className = "chat-avatar";
+        avatar.setAttribute("aria-hidden", "true");
+        const messageBlook = blookCatalog.find((item) => item.id === message.avatarId);
+        if (messageBlook) {
+          avatar.replaceChildren(createBlookArt(messageBlook));
+        } else {
+          const starterImage = document.createElement("img");
+          starterImage.src = starterBlookImageUrl;
+          starterImage.alt = "";
+          avatar.appendChild(starterImage);
+        }
+        const body = document.createElement("div");
+        body.className = "chat-message-body";
+        const name = document.createElement("strong");
+        name.textContent = message.username;
+        name.classList.toggle("testboy-account-name", message.username.toLowerCase() === "testboy");
+        const badges = Array.isArray(message.badges) ? [...message.badges] : [];
+        if (message.username.toLowerCase() === "testboy") {
+          ["TESTER", "ADMIN"].forEach((badge) => {
+            if (!badges.includes(badge)) {
+              badges.push(badge);
+            }
+          });
+        }
+        badges.forEach((badge) => {
+          const badgeTag = document.createElement("span");
+          badgeTag.className = "profile-badge chat-badge";
+          badgeTag.textContent = badge;
+          body.appendChild(badgeTag);
+        });
+        const text = document.createElement("span");
+        text.textContent = ": ";
+        body.append(name, text);
+        const renderedText = document.createElement("span");
+        const mentionParts = formatMentionedText(message.text);
+        mentionParts.forEach((node) => renderedText.appendChild(node));
+        body.appendChild(renderedText);
+        if (message.screenshotUrl) {
+          const screenshot = document.createElement("img");
+          screenshot.className = "chat-screenshot";
+          screenshot.src = message.screenshotUrl;
+          screenshot.alt = `Screenshot shared by ${message.username}`;
+          screenshot.loading = "lazy";
+          body.appendChild(screenshot);
+        }
+        row.append(avatar, body);
+        chatLog.appendChild(row);
+      });
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    chatInput.addEventListener("input", () => {
+      const value = chatInput.value;
+      const lastAt = value.lastIndexOf("@");
+      if (lastAt >= 0 && (lastAt === 0 || /\s/.test(value.slice(lastAt - 1, lastAt)))) {
+        const query = value.slice(lastAt + 1).trim();
+        if (!query || /[A-Za-z0-9_]/.test(query)) {
+          chatAccountSearch.value = query;
+          updateMentionSuggestions(query);
+          return;
+        }
+      }
+      chatAccountSearch.value = "";
+      updateMentionSuggestions();
+    });
+
+    chatAccountSearch.addEventListener("input", () => {
+      updateMentionSuggestions(chatAccountSearch.value);
+    });
+
+    async function loadChatMessages() {
+      if (!supabaseConfigured || !supabase) {
+        chatMessages = [];
+        chatError.textContent = "Shared chat is unavailable until the Bevelit Supabase project is connected.";
+        renderChatMessages();
+        return;
+      }
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error("Could not verify the chat sign-in.", sessionError);
+        chatError.textContent = "Could not verify your sign-in for chat. Please sign in again.";
+        return;
+      }
+      if (!sessionData.session) {
+        chatMessages = [];
+        chatError.textContent = "Sign in with a Bevelit account to use shared chat.";
+        renderChatMessages();
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("chat_messages")
+        .select("id, username, content, avatar_id, screenshot_path, created_at")
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .limit(100);
+      if (error) {
+        console.error("Could not load shared chat messages.", error);
+        if (error.code === "42703" && error.message.includes("screenshot_path")) {
+          chatError.textContent = "The chat database is missing screenshot support. Apply the pending migrations with supabase db push, then reload.";
+        } else if (error.code === "42P01" || error.code === "PGRST205") {
+          chatError.textContent = "The shared chat table is missing. Apply the pending migrations with supabase db push, then reload.";
+        } else {
+          chatError.textContent = `Could not load shared chat (database error ${error.code || "unknown"}).`;
+        }
+        return;
+      }
+
+      let screenshotLoadFailed = false;
+      chatMessages = await Promise.all(data.reverse().map(async (message) => {
+        let screenshotUrl = null;
+        if (message.screenshot_path) {
+          const { data: signedUrl, error: signedUrlError } = await supabase.storage
+            .from("chat-screenshots")
+            .createSignedUrl(message.screenshot_path, 3600);
+          if (signedUrlError) {
+            console.error("Could not load a shared screenshot.", signedUrlError);
+            screenshotLoadFailed = true;
+          } else {
+            screenshotUrl = signedUrl.signedUrl;
+          }
+        }
+        return {
+          username: message.username,
+          text: message.content,
+          avatarId: message.avatar_id,
+          screenshotUrl,
+          time: message.created_at
+        };
+      }));
+      chatError.textContent = screenshotLoadFailed
+        ? "One or more screenshots could not be loaded. Check the storage policies."
+        : "";
+      renderChatMessages();
+    }
+
+    async function connectToChat() {
+      if (!supabaseConfigured || !supabase) {
+        chatError.textContent = "Shared chat is unavailable until the Bevelit Supabase project is connected.";
+        renderChatMessages();
+        return;
+      }
+      if (!chatRealtimeChannel) {
+        chatRealtimeChannel = supabase
+          .channel("bevelit-shared-chat")
+          .on("presence", { event: "sync" }, renderChatOnlineCount)
+          .on("postgres_changes", {
+            event: "INSERT",
+            schema: "public",
+            table: "chat_messages"
+          }, () => {
+            void loadChatMessages();
+          })
+          .on("postgres_changes", {
+            event: "*",
+            schema: "public",
+            table: "player_market_state",
+            filter: `user_id=eq.${currentAccountUserId}`
+          }, (payload) => {
+            if (!payload.new || payload.new.user_id !== currentAccountUserId) {
+              return;
+            }
+            try {
+              localStorage.setItem(
+                marketStorageKey(currentAccountUsername),
+                JSON.stringify(normalizeMarketState(payload.new))
+              );
+            } catch (storageError) {
+              console.error("Could not cache a market-state update.", storageError);
+              marketFeedback.textContent = "Your market items updated, but could not be cached in this browser.";
+              return;
+            }
+            renderMarket();
+            renderProfile();
+          })
+          .subscribe((status) => {
+            if (status === "SUBSCRIBED") {
+              void trackChatPresence();
+            }
+            if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+              console.error(`Shared chat realtime subscription failed: ${status}.`);
+              chatError.textContent = "Live chat disconnected. Check the Supabase Realtime setup.";
+            }
+          });
+      }
+      await loadChatMessages();
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!supabaseConfigured || !supabase) {
+        chatError.textContent = "Shared chat is unavailable until the Bevelit Supabase project is connected.";
+        return;
+      }
+      const username = document.getElementById("account-username").textContent;
+      const restriction = getRestrictionStatus(username);
+      if (restriction.banned) {
+        chatError.textContent = `You are banned until ${new Date(restriction.bannedUntil).toLocaleString()}.`;
+        return;
+      }
+      if (restriction.muted) {
+        chatError.textContent = `You are muted until ${new Date(restriction.mutedUntil).toLocaleString()}.`;
+        return;
+      }
+      const text = chatInput.value.trim();
+      const screenshotFile = chatScreenshotInput.files?.[0] || null;
+      if (!text && !screenshotFile) {
+        return;
+      }
+      if (screenshotFile && !currentCanShareScreenshots) {
+        chatError.textContent = "Ask an admin to enable screenshot sharing for your account.";
+        return;
+      }
+      if (screenshotFile && !["image/png", "image/jpeg", "image/webp"].includes(screenshotFile.type)) {
+        chatError.textContent = "Choose a PNG, JPEG, or WebP screenshot.";
+        return;
+      }
+      if (screenshotFile && (screenshotFile.size === 0 || screenshotFile.size > 5 * 1024 * 1024)) {
+        chatError.textContent = "Screenshots must be 5 MB or smaller.";
+        return;
+      }
+      const marketState = loadMarketState();
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        console.error("Could not verify the chat sign-in before sending.", sessionError);
+        chatError.textContent = "Sign in with a Bevelit account before sending a chat message.";
+        return;
+      }
+      chatForm.querySelector("button[type='submit']").disabled = true;
+      let screenshotPath = null;
+      if (screenshotFile) {
+        const extension = screenshotFile.type === "image/jpeg" ? "jpg" : screenshotFile.type.split("/")[1];
+        screenshotPath = `${sessionData.session.user.id}/${crypto.randomUUID()}.${extension}`;
+        const { error: uploadError } = await supabase.storage
+          .from("chat-screenshots")
+          .upload(screenshotPath, screenshotFile, {
+            cacheControl: "3600",
+            contentType: screenshotFile.type,
+            upsert: false
+          });
+        if (uploadError) {
+          console.error("Could not upload the shared screenshot.", uploadError);
+          chatError.textContent = "Your screenshot could not be uploaded. Check your permission and try again.";
+          chatForm.querySelector("button[type='submit']").disabled = false;
+          return;
+        }
+      }
+      const { error } = await supabase.from("chat_messages").insert({
+        user_id: sessionData.session.user.id,
+        username: username.toLowerCase(),
+        content: text || "Shared a screenshot",
+        avatar_id: marketState.equipped || null,
+        screenshot_path: screenshotPath
+      });
+      if (error) {
+        console.error("Could not send shared chat message.", error);
+        if (screenshotPath) {
+          const { error: cleanupError } = await supabase.storage
+            .from("chat-screenshots")
+            .remove([screenshotPath]);
+          if (cleanupError) {
+            console.error("Could not remove the unshared screenshot.", cleanupError);
+          }
+        }
+        chatError.textContent = "Your message could not be sent. Please try again.";
+        chatForm.querySelector("button[type='submit']").disabled = false;
+        return;
+      }
+      chatError.textContent = "";
+      chatInput.value = "";
+      chatScreenshotInput.value = "";
+      chatAccountSearch.value = "";
+      updateMentionSuggestions();
+      chatForm.querySelector("button[type='submit']").disabled = false;
+      await loadChatMessages();
+    });
+
+    function addFallingImage() {
+      const imageButton = document.createElement("button");
+      const image = document.createElement("img");
+      const size = 25 + Math.random() * 40;
+      const duration = 5 + Math.random() * 5;
+
+      imageButton.className = "falling-image";
+      imageButton.type = "button";
+      imageButton.setAttribute("aria-label", "Dismiss falling image");
+      imageButton.style.left = `${Math.random() * 100}vw`;
+      imageButton.style.width = `${size}px`;
+      imageButton.style.setProperty("--fall-duration", `${duration}s`);
+      imageButton.addEventListener("click", () => {
+        imageButton.classList.add("is-popping");
+      });
+
+      image.src = fallingImageUrl;
+      image.alt = "";
+      imageButton.appendChild(image);
+      fallingLayer.appendChild(imageButton);
+
+      image.addEventListener("animationend", (event) => {
+        if (event.animationName === "click-pop") {
+          imageButton.remove();
+        }
+      });
+      imageButton.addEventListener("animationend", () => imageButton.remove());
+      window.setTimeout(addFallingImage, 900 + Math.random() * 1100);
+    }
+
+    window.setTimeout(addFallingImage, 500);
+  </script>
+</body>
+</html>
